@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es5",
+    "sourceMap": true,
+    "module": "commonjs",
+    "jsx": "react",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": false
+  },
+  "files": [
+    "./references.d.ts",
+    "./website.tsx",
+    "./server.tsx",
+    "./test/test.ts"
+  ]
+}
