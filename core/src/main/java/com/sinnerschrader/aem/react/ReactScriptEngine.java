@@ -254,14 +254,14 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         SlingBindings more = (SlingBindings)request.getAttribute(SlingBindings.class.getName());
        // EditContext editContext=(EditContext) bindings.get("editContext");
         IncludeOptions options = IncludeOptions.getOptions(request, true);
-        if (editContext!=null) {
-        //options.forceEditContext(true);
-        //options.setDecorationTagName("");
-        } else {
+        if (editContext==null) {
+          // this is the editable.refresh() case where the root should not be decorated but all others.
+          // TODO better move this code up to the eval method
           String[] selectors = request.getRequestPathInfo().getSelectors();
          //StringBuilder replaceSelectors = 
           options.forceEditContext(true);
           options.setDecorationTagName("");
+          // TODO only remove editCOntext selector.
           opts.setReplaceSelectors("");
           //opts.setReplaceSelectors("");
           //ComponentContext componentContext=(ComponentContext) bindings.get("componentContext");
