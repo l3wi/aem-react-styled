@@ -41,6 +41,7 @@ export default class Accordion extends Container.StackContainer {
         contentModel.forEach(function (model:Container.ContentModel, childIdx:number) {
             toggles.push(<Toggle groupId={this.props.path} onChange={function() {this.onChange(childIdx)}.bind(this)} key={model.node} node={ model.node }
                                  resourceType={model.resourceType}
+                                 cqHidden={this.props.cqHidden}
                                  active={ activeIndex==childIdx } label={ model.label } path={ this.props.path + "/" + model.node }
                                  wcmmode={ this.props.wcmmode }></Toggle>);
         }, this);
@@ -48,7 +49,7 @@ export default class Accordion extends Container.StackContainer {
         var newZone:React.ReactElement<any> = null;
         if (this.isWcmEditable()) {
             var resourceType=this.getResourceType()+"/new";
-            newZone =<ResourceInclude element="div" hidden={true} path={ this.props.path + "/*" }
+            newZone =<ResourceInclude wcmmode={this.props.wcmmode} element="div" hidden={true} path={ this.props.path + "/*" }
                                       resourceType={resourceType}></ResourceInclude>;
         }
         return (

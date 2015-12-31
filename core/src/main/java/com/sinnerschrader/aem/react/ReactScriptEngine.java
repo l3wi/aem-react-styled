@@ -32,6 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.WCMMode;
+import com.day.cq.wcm.api.components.ComponentContext;
+import com.day.cq.wcm.api.components.EditContext;
+import com.day.cq.wcm.api.components.IncludeOptions;
+import com.day.cq.wcm.commons.WCMUtils;
 import com.fasterxml.jackson.core.JsonGenerator.Feature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jknack.handlebars.Handlebars;
@@ -75,10 +79,10 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       ReactComponentConfig config = parseReactComponentConfig(reader);
 
       if (config.isReload()) {
-        // This is a react child component. The üage needs to be rerendered
+        // This is a react child component. The page needs to be rerendered
         // completely. In the future we might ask the parent to reload its
         // content via ajax.
-        String script = "<script>window.location=window.location;</script>";
+        String script = "<script>AemGlobal.componentManager.reloadRootInCq('"+resource.getPath()+"')</script>";
         context.getWriter().write(script);
       } else {
 
@@ -166,6 +170,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       JSONObject reactProps = new JSONObject();
       reactProps.put("resource", resourceAsJson);
       reactProps.put("component", config.getComponent());
+      reactProps.put("depth", config.getDepth());
       reactProps.put("wcmmode", getWcmMode(request));
       reactProps.put("path", resource.getPath());
       return reactProps;
@@ -224,13 +229,18 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
    * @param context
    */
   private void includeResource(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context) {
+    
+    
     Bindings bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
     if (StringUtils.isEmpty(script)) {
       LOG.error("Script path cannot be empty");
     } else {
       SlingHttpServletResponse customResponse = new PrintWriterResponseWrapper(out, (SlingHttpServletResponse) bindings.get(SlingBindings.RESPONSE));
       SlingHttpServletRequest request = (SlingHttpServletRequest) bindings.get(SlingBindings.REQUEST);
+      
       script = normalizePath(request, script);
+      ComponentContext componentContext = WCMUtils.getComponentContext(request);
+      EditContext editContext=componentContext.getEditContext();
 
       Resource includeRes = request.getResourceResolver().resolve(script);
       if (includeRes instanceof NonExistingResource || includeRes.isResourceType(Resource.RESOURCE_TYPE_NON_EXISTING)) {
@@ -241,8 +251,27 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         if (StringUtils.isNotEmpty(resourceType)) {
           opts.setForceResourceType(resourceType);
         }
+        SlingBindings more = (SlingBindings)request.getAttribute(SlingBindings.class.getName());
+       // EditContext editContext=(EditContext) bindings.get("editContext");
+        IncludeOptions options = IncludeOptions.getOptions(request, true);
+        if (editContext!=null) {
+        //options.forceEditContext(true);
+        //options.setDecorationTagName("");
+        } else {
+          String[] selectors = request.getRequestPathInfo().getSelectors();
+         //StringBuilder replaceSelectors = 
+          options.forceEditContext(true);
+          options.setDecorationTagName("");
+          opts.setReplaceSelectors("");
+          //opts.setReplaceSelectors("");
+          //ComponentContext componentContext=(ComponentContext) bindings.get("componentContext");
+          //componentContext.setDecorate(false);
+        }
+        
+
         RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
         dispatcher.include(request, customResponse);
+        //editContext.includeEpilog(request, customResponse, WCMMode.fromRequest(request));
       } catch (Exception e) {
         LOG.error("Failed to include resource {}", script, e);
       }
