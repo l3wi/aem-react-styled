@@ -32,3 +32,7 @@ AemReact.setVisibility = function(path, visible) {
 		}
 	}
 }
+
+AemReact.onDelete = function(editable) {
+	console.log("deleted");
+}

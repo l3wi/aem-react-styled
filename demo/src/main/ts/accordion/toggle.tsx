@@ -34,9 +34,18 @@ export class Toggle extends Aem.AemComponent<ToggleProps, any> {
 
         // TODO CqEdit should be executed on client side only. also element should be set to outer div
 
+
+        var editConfig = {
+            "listeners": {
+                "afterdelete": "REFRESH_PARENT"
+            }
+        };
+
+
+
         return (
             <div className="toggle">
-                <Aem.CqEdit wcmmode={this.props.wcmmode} path={this.props.path} resourceType={resourceType}/>
+                <Aem.CqEdit editConfig={editConfig} wcmmode={this.props.wcmmode} path={this.props.path} resourceType={resourceType}/>
                 <input ref="toggleRadio" type="radio" className="toggle-input-state" checked={this.props.active} id={this.props.path}
                        name={this.props.groupId} onChange={onChange}/>
                 <label className="toggle-input-toggle toggle-input-js-toggle"
