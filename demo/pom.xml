@@ -30,6 +30,11 @@
 		<packaging>content-package</packaging>
 		<name>website - UI apps</name>
 		<description>UI apps package for website</description>
+    
+    <properties>
+      <javascript.environment>production</javascript.environment>
+    </properties>
+
 
 		<!-- <scm> <connection></connection> <developerConnection></developerConnection> 
 				<url></url> <tag>HEAD</tag> </scm -->
@@ -103,7 +108,7 @@
 								</executions>
 						</plugin>
 
-					<!-- 	<plugin>
+					<plugin>
 								<groupId>org.codehaus.mojo</groupId>
 								<artifactId>exec-maven-plugin</artifactId>
 								<version>1.4.0</version>
@@ -129,17 +134,20 @@
 												<goals>
 														<goal>exec</goal>
 												</goals>
+                        <!-- TODO we need to define environment mode: product|development -->
 												<configuration>
 														<skip>${skip-npm-start}</skip>
 														<workingDirectory>${basedir}/src/main/ts</workingDirectory>
 														<executable>npm</executable>
 														<arguments>
-																<argument>start</argument>
+																<argument>run</argument>
+                                <argument>start</argument>
+                                <argument>--env=${javascript.environment}</argument>
 														</arguments>
 												</configuration>
 										</execution>
 								</executions>
-						</plugin> -->
+						</plugin>
 
 						<!-- ====================================================================== -->
 						<!-- V A U L T P A C K A G E P L U G I N -->
@@ -175,6 +183,12 @@
 		<!-- ====================================================================== -->
 		<profiles>
 				<profile>
+            <id>dev</id>
+            <properties>
+              <javascript.environment>development</javascript.environment>
+            </properties>
+        </profile>
+        <profile>
 						<id>autoInstallPackage</id>
 						<activation>
 								<activeByDefault>false</activeByDefault>

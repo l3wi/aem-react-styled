@@ -170,6 +170,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       JSONObject reactProps = new JSONObject();
       reactProps.put("resource", resourceAsJson);
       reactProps.put("component", config.getComponent());
+      // TODO remove depth and provide custom service to get the resource as json without spcifying the depth. This makes it possible to privde custom loader.
       reactProps.put("depth", config.getDepth());
       reactProps.put("wcmmode", getWcmMode(request));
       reactProps.put("path", resource.getPath());

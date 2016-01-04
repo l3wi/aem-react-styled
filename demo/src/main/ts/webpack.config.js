@@ -3,6 +3,8 @@
 var path = require('path');
 var webpack = require('webpack');
 
+var jcrPath = path.join(__dirname, '..', 'content', 'jcr_root', 'etc', 'designs', 'react-demo', 'js', 'react-demo');
+
 var serverJs = false;
 for (var idx in process.argv) {
     var arg = process.argv[idx];
@@ -32,7 +34,7 @@ var config = {
     entry: entries,
     debug:true,
     output: {
-        path: path.join(__dirname, '..', 'content', 'jcr_root', 'etc', 'designs', 'react-demo', 'js', 'react-demo'),
+        path: jcrPath,
         filename: targetFileName
     },
     resolveLoader: {
@@ -56,8 +58,7 @@ var config = {
             'process.env': {
                 'NODE_ENV': '"' + process.env.NODE_ENV + '"'
             }
-        }),
-        new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de|es/)
+        })
     ]
 };
 

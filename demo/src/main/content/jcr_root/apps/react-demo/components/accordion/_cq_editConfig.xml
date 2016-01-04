@@ -14,3 +14,4 @@
     jcr:primaryType="cq:EditListenersConfig"
     render="function(constructor) {constructor.cellSearchPath='accordion'}" ></cq:listeners>
 </jcr:root>
+

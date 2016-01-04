@@ -1,46 +1,45 @@
-import * as React from 'react';
-import * as Aem from 'aem-react-js/aem';
-import CqUtils from 'aem-react-js/CqUtils';
-import { ResourceInclude }  from 'aem-react-js/include';
+import * as React from "react";
+import * as Aem from "aem-react-js/aem";
+import CqUtils from "aem-react-js/CqUtils";
+import { ResourceInclude }  from "aem-react-js/include";
 
 
 interface ToggleProps extends Aem.AemProps {
-    resourceType:string;
-    label:string;
-    node:string;
-    active:boolean;
-    path:string;
-    key:string;
-    groupId:string;
-    onChange():void;
+    resourceType: string;
+    label: string;
+    node: string;
+    active: boolean;
+    path: string;
+    key: string;
+    groupId: string;
+    onChange(): void;
 }
 
 export class Toggle extends Aem.AemComponent<ToggleProps, any> {
 
 
-    render() {
-        var onChange = function () {
+    public render(): React.ReactElement<any> {
+        let onChange = function (): void {
             this.props.onChange();
         }.bind(this);
 
-        var label:string = this.props.label || "Set a Label";
+        let label: string = this.props.label || "Set a Label";
 
         if (this.isWcmEditable()) {
             this.setAllEditableVisible(this.props.path, this.props.active && !this.props.cqHidden);
-            CqUtils.setVisible(this.props.path+"/togglepar/*", this.props.active && !this.props.cqHidden, true)
+            CqUtils.setVisible(this.props.path + "/togglepar/*", this.props.active && !this.props.cqHidden, true);
         }
 
-        let resourceType:string = this.props.resourceType;
+        let resourceType: string = this.props.resourceType;
 
         // TODO CqEdit should be executed on client side only. also element should be set to outer div
 
 
-        var editConfig = {
+        let editConfig = {
             "listeners": {
                 "afterdelete": "REFRESH_PARENT"
             }
         };
-
 
 
         return (
@@ -52,7 +51,8 @@ export class Toggle extends Aem.AemComponent<ToggleProps, any> {
                        htmlFor={this.props.path}>{label}
                 </label>
                 <div className="toggle-input-content">
-                    <ResourceInclude wcmmode={this.props.wcmmode} path={this.props.path+"/togglepar"} resourceType="/libs/foundation/components/parsys"></ResourceInclude>
+                    <ResourceInclude wcmmode={this.props.wcmmode} path={this.props.path + "/togglepar"}
+                                     resourceType="/libs/foundation/components/parsys"></ResourceInclude>
                 </div>
             </div>
 

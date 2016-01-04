@@ -1,6 +1,6 @@
 {
   "name": "website",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "index.js",
   "config": {
     "aemhost": "localhost"
@@ -11,7 +11,7 @@
     "start": "webpack --env=development && webpack --env=development --server",
     "watch": "echo \"deploying continuously to $npm_package_config_aemhost\" & webpack --env=development --watch & webpack --env=development --server --watch & webdav-sync --local_base ../content/jcr_root/ --remote_base http://admin:admin@$npm_package_config_aemhost:4502/crx/repository/crx.default/",
     "test": "mocha --compilers ts:espower-typescript/guess test/*.ts",
-    "lint": "eslint . & tslint **/*.ts",
+    "lint": "eslint . & tslint **/*.tsx",
     "prepublish": "npm test"
   },
   "repository": {
@@ -24,7 +24,7 @@
     "node-libs-browser": "^0.5.3",
     "process": "^0.11.1",
     "react": "^0.13.3",
-    "aem-react-js":"/Users/stemey/work/projects/aem-react-js/aem-react-js-0.0.1.tgz"
+    "aem-react-js":"^0.1.0"
   },
   "devDependencies": {
     "eslint": "^1.6.0",
