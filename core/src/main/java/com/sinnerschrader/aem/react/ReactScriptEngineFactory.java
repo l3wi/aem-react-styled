@@ -36,11 +36,13 @@ import com.sinnerschrader.aem.react.loader.ScriptLoader;
 @Service(ScriptEngineFactory.class)
 @Properties({ @Property(name = "service.description", value = "Reactjs Templating Engine"),//
     @Property(name = "compatible.javax.script.name", value = "jsx"),// TODO also use it for extension and other props.
+    @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_PATHS, label="the jcr paths to the scripts libraries"),//
     @Property(name = ReactScriptEngineFactory.PROPERTY_POOL_TOTAL_SIZE, label="total javascript engine pool size", longValue = 20),//
     @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_RELOAD, label="reload library scripts before each rendering", boolValue = true),//
 })
 public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
+  public static final String PROPERTY_SCRIPTS_PATHS = "scripts.paths";
   public static final String PROPERTY_SUBSERVICENAME = "subServiceName";
   public static final String PROPERTY_POOL_TOTAL_SIZE = "pool.total.size";
   public static final String PROPERTY_SCRIPTS_RELOAD = "scripts.reload";
@@ -60,9 +62,8 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
   private ReactScriptEngine engine;
 
-  private String[] scriptResources = new String[] { "/etc/designs/react-demo/js/react-demo/server.js/jcr:content" };
 
-  protected ScriptCollectionLoader createLoader() {
+  protected ScriptCollectionLoader createLoader(final String[] scriptResources) {
     // we need to add the nashorn polyfill for console, global and AemGlobal
     String polyFillName = this.getClass().getPackage().getName().replace(".", "/") + "/" + NASHORN_POLYFILL_JS;
 
@@ -113,8 +114,9 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
   @Activate
   public void initialize(final ComponentContext context) {
+    String[] scriptResources = PropertiesUtil.toStringArray(context.getProperties().get(PROPERTY_SCRIPTS_PATHS), new String[0]);
     int poolTotalSize = PropertiesUtil.toInteger(context.getProperties().get(PROPERTY_POOL_TOTAL_SIZE), 20);
-    JavacriptEnginePoolFactory javacriptEnginePoolFactory = new JavacriptEnginePoolFactory(createLoader());
+    JavacriptEnginePoolFactory javacriptEnginePoolFactory = new JavacriptEnginePoolFactory(createLoader(scriptResources));
     ObjectPool<JavascriptEngine> pool = createPool(poolTotalSize, javacriptEnginePoolFactory);
     this.engine = new ReactScriptEngine(this, pool, isReloadScripts(context));
   }

@@ -252,27 +252,18 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         if (StringUtils.isNotEmpty(resourceType)) {
           opts.setForceResourceType(resourceType);
         }
-        SlingBindings more = (SlingBindings)request.getAttribute(SlingBindings.class.getName());
-       // EditContext editContext=(EditContext) bindings.get("editContext");
         IncludeOptions options = IncludeOptions.getOptions(request, true);
         if (editContext==null) {
           // this is the editable.refresh() case where the root should not be decorated but all others.
           // TODO better move this code up to the eval method
-          String[] selectors = request.getRequestPathInfo().getSelectors();
-         //StringBuilder replaceSelectors = 
           options.forceEditContext(true);
           options.setDecorationTagName("");
-          // TODO only remove editCOntext selector.
           opts.setReplaceSelectors("");
-          //opts.setReplaceSelectors("");
-          //ComponentContext componentContext=(ComponentContext) bindings.get("componentContext");
-          //componentContext.setDecorate(false);
         }
         
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
         dispatcher.include(request, customResponse);
-        //editContext.includeEpilog(request, customResponse, WCMMode.fromRequest(request));
       } catch (Exception e) {
         LOG.error("Failed to include resource {}", script, e);
       }
