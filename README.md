@@ -4,9 +4,9 @@
 This project makes it possible to render Adobe Experience Manager ("AEM") components via React. The project contains:
 
 - An OSGi bundle to render React components inside an AEM server.
-- A demo content package showing the way to develop React components using [TypeScript](http://www.typescriptlang.org/) and state of the art javascript development tools like [webpack](https://webpack.github.io/).
+- A demo content package showing the way to develop React components using [TypeScript](//www.typescriptlang.org/) and state of the art javascript development tools like [webpack](https://webpack.github.io/).
 
-The basic javascript functionality is located in a separate [project](http://www.github.com/sinnerschrader/aem-react-js).
+The basic javascript functionality is located in a separate [project](//www.github.com/sinnerschrader/aem-react-js).
 
 # Why React and AEM?
 
@@ -15,7 +15,7 @@ This project brings these technologies together, so that you can build highly in
 
 # Features
 
-- [Universal](http://www.2ality.com/2015/08/isomorphic-javascript.html) React rendering
+- [Universal](//www.2ality.com/2015/08/isomorphic-javascript.html) React rendering
 - High performance javascript execution with a pool of Java 8 [nashorn](https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/) engines. 
 - Nesting React components in other AEM components and vice versa is supported.
 - WCM edit mode support in React components.
@@ -31,7 +31,7 @@ To install the demo locally:
 
 git clone https://github.com/sinnerschrader/aem-react.git
 
-cd aem-eeact
+cd aem-react
 
 mvn clean install -PautoInstallPackage
 
@@ -55,12 +55,12 @@ mvn clean install -PautoInstallPackage
 
 Starting modifying the react components in demo/src/main/ts/
 
-See [README.md](./src/main/ts/README.md)
+See [README.md](//github.com/sinnerschrader/aem-react/blob/master/demo/src/main/ts/README.md)
 
 Both the build tools and OSGI bundle need to agree on the location of the 
 javascript sources. Check the configuration:
-- [ReactScriptEngineFactory](http://www.github.com/demo/src/main/content/jcr_root/apps/react-demo/config/com.sinnerschrader.aem.react.ReactScriptEngineFactory.xml)
-- [webpack.config.js](http://www.github.com/aem-react-aem-react/demo/src/main/ts/webpack.config.js)
+- [ReactScriptEngineFactory](https://github.com/sinnerschrader/aem-react/blob/master/demo/src/main/content/jcr_root/apps/react-demo/config/com.sinnerschrader.aem.react.ReactScriptEngineFactory.xml#L6)
+- [webpack.config.js](https://github.com/sinnerschrader/aem-react/blob/master/demo/src/main/ts/webpack.config.js#L6)
 
 ## Example
 
@@ -110,16 +110,20 @@ Contributions are welcome!
 The repository contains the OSGI bundle in the folder core.
 In the folder demo is a demo project that can be used as a starting point 
 for your own project.
-The [javascript library](http://www.github.com/sinnerschrader/aem-react-js) is required
-and integrated by the build tools in the demo project.
 
 ## OSGI core bundle
 
-The maven module in `./core` contains the implementation of the AEM component type. 
+The maven module in `./core` contains the implementation of the AEM component type and the
+pool of nashorn engines.
 
 ## Demo content package
 
 The maven module in `./demo` defines a demo content package that includes some example components and demo pages.
+
+## Javascript library
+
+The [javascript library](//www.github.com/sinnerschrader/aem-react-js) is required
+and integrated by the build tools in the demo project.
 
 
 # Dependencies
@@ -129,4 +133,4 @@ The maven module in `./demo` defines a demo content package that includes some e
 
 
 [React]: https://facebook.github.io/react/
-[AEM]: http://www.adobe.com/de/marketing-cloud/enterprise-content-management.html
+[AEM]: //www.adobe.com/de/marketing-cloud/enterprise-content-management.html
