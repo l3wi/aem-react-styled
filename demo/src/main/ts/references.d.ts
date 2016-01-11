@@ -9,4 +9,15 @@ interface Window {
     [name: string]: any
   };
   AemGlobal: any;
+  initReactComponents(): void;
+
 }
+
+
+
+export interface Promise {
+    then(success: (result: any) => void, error: (e: any) => void): Promise;
+}
+
+
+

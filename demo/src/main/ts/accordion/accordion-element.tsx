@@ -4,7 +4,7 @@ import CqUtils from "aem-react-js/CqUtils";
 import ReactParsys  from "aem-react-js/component/ReactParsys";
 
 
-interface AccordionElementProps extends resource.ResourceProps<any> {
+interface AccordionElementProps extends resource.ResourceProps {
     active: boolean;
     key: string;
     groupId: string;
@@ -43,6 +43,8 @@ export default class AccordionElement extends resource.ResourceComponent<any, Ac
         );
 
     }
+
+
 }
 
 

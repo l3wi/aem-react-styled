@@ -3,5 +3,5 @@
     xmlns:jcr="http://www.jcp.org/jcr/1.0" 
     jcr:primaryType="sling:OsgiConfig"
     service.ranking="{Long}0"
-    user.mapping="[com.sinnerschrader.aem.react.core:scriptloader=admin]" 
+    user.mapping="[com.sinnerschrader.aem.react.core:scriptloader=admin,com.sinnerschrader.aem.react.core:demo=admin]" 
     />

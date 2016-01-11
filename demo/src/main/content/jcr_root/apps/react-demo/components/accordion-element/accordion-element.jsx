@@ -1,4 +1,2 @@
 {
-  "component":"Toggle",
-  "reload":true
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" jcr:primaryType="cq:Dialog"
+  title="TextField" xtype="dialog">
+  <items
+    jcr:primaryType="cq:Widget"
+    title="TextField"
+    xtype="panel">
+    <items
+      jcr:primaryType="cq:WidgetCollection">
+      <label jcr:primaryType="cq:Widget" fieldLabel="label" name="./label"
+        xtype="textfield">
+      </label>
+      <required jcr:primaryType="cq:Widget" fieldLabel="required" name="./required"
+        xtype="textfield">
+      </required>
+      <pattern jcr:primaryType="cq:Widget" fieldLabel="pattern" name="./pattern"
+        xtype="textfield">
+      </pattern>
+      </items>
+  </items>
+</jcr:root>
+ 

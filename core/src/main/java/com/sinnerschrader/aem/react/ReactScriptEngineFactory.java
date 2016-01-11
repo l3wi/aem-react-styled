@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.ArrayList;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import javax.jcr.RepositoryException;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
@@ -28,17 +33,27 @@ import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.scripting.api.AbstractScriptEngineFactory;
 import org.osgi.service.component.ComponentContext;
 
+import com.sinnerschrader.aem.react.data.OsgiServiceFinder;
 import com.sinnerschrader.aem.react.exception.TechnicalException;
+import com.sinnerschrader.aem.react.loader.HashedScript;
+import com.sinnerschrader.aem.react.loader.JcrResourceChangeListener;
 import com.sinnerschrader.aem.react.loader.ScriptCollectionLoader;
 import com.sinnerschrader.aem.react.loader.ScriptLoader;
+import com.sinnerschrader.aem.react.repo.RepositoryConnectionFactory;
 
-@Component(label = "HLAG-Web ReactJs Script Engine Factory", metatype = true)
+@Component(label = "ReactJs Script Engine Factory", metatype = true)
 @Service(ScriptEngineFactory.class)
-@Properties({ @Property(name = "service.description", value = "Reactjs Templating Engine"),//
-    @Property(name = "compatible.javax.script.name", value = "jsx"),// TODO also use it for extension and other props.
-    @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_PATHS, label="the jcr paths to the scripts libraries"),//
-    @Property(name = ReactScriptEngineFactory.PROPERTY_POOL_TOTAL_SIZE, label="total javascript engine pool size", longValue = 20),//
-    @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_RELOAD, label="reload library scripts before each rendering", boolValue = true),//
+@Properties({ @Property(name = "service.description", value = "Reactjs Templating Engine"), //
+    @Property(name = "compatible.javax.script.name", value = "jsx"), // TODO
+                                                                     // also use
+                                                                     // it for
+                                                                     // extension
+                                                                     // and
+                                                                     // other
+                                                                     // props.
+    @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_PATHS, label = "the jcr paths to the scripts libraries", value = {}, cardinality = Integer.MAX_VALUE), //
+    @Property(name = ReactScriptEngineFactory.PROPERTY_POOL_TOTAL_SIZE, label = "total javascript engine pool size", longValue = 20), //
+    @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_RELOAD, label = "reload library scripts before each rendering", boolValue = true),//
 })
 public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
@@ -54,6 +69,9 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
   private DynamicClassLoaderManager dynamicClassLoaderManager;
 
   @Reference
+  private OsgiServiceFinder finder;
+
+  @Reference
   private ScriptLoader scriptLoader;
 
   private static final String NASHORN_POLYFILL_JS = "nashorn-polyfill.js";
@@ -62,8 +80,15 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
   private ReactScriptEngine engine;
 
+  private List<HashedScript> scripts;
+  private String[] scriptResources;
+  private JcrResourceChangeListener listener;
 
-  protected ScriptCollectionLoader createLoader(final String[] scriptResources) {
+  @Reference
+  private RepositoryConnectionFactory repositoryConnectionFactory;
+
+  public synchronized void createScripts() {
+    List<HashedScript> newScripts = new LinkedList<>();
     // we need to add the nashorn polyfill for console, global and AemGlobal
     String polyFillName = this.getClass().getPackage().getName().replace(".", "/") + "/" + NASHORN_POLYFILL_JS;
 
@@ -71,21 +96,40 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
     if (polyFillUrl == null) {
       throw new TechnicalException("cannot find initial script " + polyFillName);
     }
+    try {
+      newScripts.add(createHashedScript("polyFillUrl", new InputStreamReader(polyFillUrl.openStream(), "UTF-8")));
+    } catch (IOException e) {
+      throw new TechnicalException("cannot open stream to " + polyFillUrl, e);
+    }
+
+    for (String scriptResource : scriptResources) {
+      try (Reader reader = scriptLoader.loadJcrScript(scriptResource)) {
+        newScripts.add(createHashedScript(scriptResource, reader));
+      } catch (IOException e) {
+        throw new TechnicalException("cannot load jcr script " + scriptResource, e);
+      }
+    }
+    this.scripts = newScripts;
+  }
+
+  private HashedScript createHashedScript(String id, Reader reader) {
+    String script;
+    try {
+      script = IOUtils.toString(reader);
+      byte[] checksum = MessageDigest.getInstance("MD5").digest(script.getBytes("UTF-8"));
+      return new HashedScript(new String(Base64.getEncoder().encode(checksum), "UTF-8"), script, id);
+    } catch (IOException | NoSuchAlgorithmException e) {
+      throw new TechnicalException("cannot created hashed script " + id, e);
+    }
+  }
+
+  protected ScriptCollectionLoader createLoader(final String[] scriptResources) {
 
     return new ScriptCollectionLoader() {
 
       @Override
-      public Iterator<Reader> iterator() {
-        List<Reader> readers = new ArrayList<Reader>();
-        try {
-          readers.add(new InputStreamReader(polyFillUrl.openStream(), "UTF-8"));
-        } catch (IOException e) {
-          throw new TechnicalException("cannot open stream to " + polyFillUrl, e);
-        }
-        for (String scriptResource : scriptResources) {
-          readers.add(scriptLoader.loadJcrScript(scriptResource));
-        }
-        return readers.iterator();
+      public Iterator<HashedScript> iterator() {
+        return scripts.iterator();
       }
     };
 
@@ -114,23 +158,31 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
   @Activate
   public void initialize(final ComponentContext context) {
-    String[] scriptResources = PropertiesUtil.toStringArray(context.getProperties().get(PROPERTY_SCRIPTS_PATHS), new String[0]);
+    scriptResources = PropertiesUtil.toStringArray(context.getProperties().get(PROPERTY_SCRIPTS_PATHS), new String[0]);
     int poolTotalSize = PropertiesUtil.toInteger(context.getProperties().get(PROPERTY_POOL_TOTAL_SIZE), 20);
-    JavacriptEnginePoolFactory javacriptEnginePoolFactory = new JavacriptEnginePoolFactory(createLoader(scriptResources));
+    JavacriptEnginePoolFactory javacriptEnginePoolFactory = new JavacriptEnginePoolFactory(createLoader(scriptResources), null);
     ObjectPool<JavascriptEngine> pool = createPool(poolTotalSize, javacriptEnginePoolFactory);
-    this.engine = new ReactScriptEngine(this, pool, isReloadScripts(context));
+    this.engine = new ReactScriptEngine(this, pool, isReloadScripts(context), finder, dynamicClassLoaderManager);
+    this.listener = new JcrResourceChangeListener(repositoryConnectionFactory, new JcrResourceChangeListener.Listener() {
+      @Override
+      public void changed(String script) {
+        createScripts();
+      }
+    });
+    this.listener.activate(scriptResources);
+    this.createScripts();
   }
-  
-  
+
   @Modified
-  public void reconfigure(final ComponentContext context) {
+  public void reconfigure(final ComponentContext context) throws RepositoryException {
     stop();
     initialize(context);
   }
 
   @Deactivate
-  public void stop() {
+  public void stop() throws RepositoryException {
     this.engine.stop();
+    this.listener.deactivate();
   }
 
   protected ObjectPool<JavascriptEngine> createPool(int poolTotalSize, JavacriptEnginePoolFactory javacriptEnginePoolFactory) {

@@ -2,5 +2,5 @@
 <workspaceFilter version="1.0">
     <filter root="/apps/react-demo" />
     <filter root="/etc/designs/react-demo"/>
-    <filter root="/content/react-demo"/>
+    <!-- <filter root="/content/react-demo"/> -->
 </workspaceFilter>

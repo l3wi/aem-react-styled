@@ -18,8 +18,8 @@ import com.sinnerschrader.aem.react.repo.RepositoryConnectionFactory;
 /**
  * TODO add a watch on the resource to reload the script when the libraries are
  * modified.
- * 
- * 
+ *
+ *
  * @author stemey
  *
  */
@@ -31,7 +31,7 @@ public class JcrScriptLoaderImpl implements ScriptLoader {
   private RepositoryConnectionFactory connectionFactory;
 
   @Override
-  public Reader loadJcrScript( String nodePath) {
+  public Reader loadJcrScript(String nodePath) {
 
     try (RepositoryConnection con = connectionFactory.getConnection("scriptloader")) {
       Node node;
