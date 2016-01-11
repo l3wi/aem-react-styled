@@ -4,7 +4,7 @@
 This project makes it possible to render Adobe Experience Manager ("AEM") components via React. The project contains:
 
 - An OSGi bundle to render React components inside an AEM server.
-- A demo content package showing the way to develop React components using [TypeScript](//www.typescriptlang.org/) and state of the art javascript development tools like [webpack](https://webpack.github.io/).
+- A demo content package showing the way to develop React components using [TypeScript](http://www.typescriptlang.org/) and state of the art javascript development tools like [webpack](http://webpack.github.io/).
 
 The basic javascript functionality is located in a separate [project](//www.github.com/sinnerschrader/aem-react-js).
 
@@ -132,5 +132,5 @@ and integrated by the build tools in the demo project.
 - >= AEM 6.0
 
 
-[React]: https://facebook.github.io/react/
-[AEM]: //www.adobe.com/de/marketing-cloud/enterprise-content-management.html
+[React]: http://facebook.github.io/react/
+[AEM]: http://www.adobe.com/de/marketing-cloud/enterprise-content-management.html
