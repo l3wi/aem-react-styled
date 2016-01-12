@@ -15,7 +15,7 @@ This project brings these technologies together, so that you can build highly in
 
 # Features
 
-- [Universal](//www.2ality.com/2015/08/isomorphic-javascript.html) React rendering
+- [Universal](http://www.2ality.com/2015/08/isomorphic-javascript.html) React rendering
 - High performance javascript execution with a pool of Java 8 [nashorn](https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/) engines. 
 - Nesting React components in other AEM components and vice versa is supported.
 - WCM edit mode support in React components.
