@@ -17,9 +17,9 @@ import com.sinnerschrader.aem.react.exception.TechnicalException;
 import com.sinnerschrader.aem.react.loader.ScriptCollectionLoader;
 
 /**
- * 
+ *
  * This Javascript engine can render ReactJs component in nashorn.
- * 
+ *
  * @author stemey
  *
  */
@@ -75,7 +75,7 @@ public class JavascriptEngine {
 
   /**
    * initialize the nashorn engine and install the default scripts.
-   * 
+   *
    * @param loader
    */
   public void initialize(ScriptCollectionLoader loader) {
@@ -103,13 +103,13 @@ public class JavascriptEngine {
 
   /**
    * render the given react component. This will invoke
-   * 
+   *
    * <pre>
-   * <code>AemGlobal.renderReactComponent(component,json)
+   * <code>AemGlobal.renderReactComponent(component,json) </code>
    * </pre>
    * 
-   * </code> in the javascript context.
-   * 
+   * in the javascript context.
+   *
    * @param component
    *          Name of the react component
    * @param json
