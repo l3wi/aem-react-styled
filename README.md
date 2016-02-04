@@ -8,6 +8,12 @@ This project makes it possible to render Adobe Experience Manager ("AEM") compon
 
 The basic javascript functionality is located in a separate [project](//www.github.com/sinnerschrader/aem-react-js).
 
+# STATUS
+
+---|---
+Version | 0.1
+API | unstable
+
 # Why React and AEM?
 
 React components are ideal to create web applications with complex client-side interactivity. AEM provides a perfect authoring interface for web content.
