@@ -14,6 +14,7 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 import javax.servlet.RequestDispatcher;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.sling.api.SlingHttpServletRequest;
@@ -64,7 +65,6 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
   }
 
-
   @Override
   public Object eval(Reader reader, ScriptContext context) throws ScriptException {
     ClassLoader old = Thread.currentThread().getContextClassLoader();
@@ -82,7 +82,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         // This is a react child component. The page needs to be rerendered
         // completely. In the future we might ask the parent to reload its
         // content via ajax.
-        String script = "<script>AemGlobal.componentManager.reloadRootInCq('"+resource.getPath()+"')</script>";
+        String script = "<script>AemGlobal.componentManager.reloadRootInCq('" + resource.getPath() + "')</script>";
         context.getWriter().write(script);
       } else {
 
@@ -98,8 +98,8 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         } else {
           renderedHtml = "";
         }
-        String allHtml = wrapHtml(resource.getPath(),reactProps, component, renderedHtml, serverRendering);
-        
+        String allHtml = wrapHtml(resource.getPath(), reactProps, component, renderedHtml, serverRendering);
+
         context.getWriter().write(allHtml);
       }
       return null;
@@ -111,28 +111,36 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
     }
 
   }
-/**
- * wrap the rendered react markup with the teaxtarea that contains the component's props.
- * @param path
- * @param reactProps
- * @param component
- * @param renderedHtml
- * @param serverRendering
- * @return
- */
-  private String wrapHtml(String path,JSONObject reactProps, String component, String renderedHtml, boolean serverRendering) {
+
+  /**
+   * wrap the rendered react markup with the teaxtarea that contains the
+   * component's props.
+   *
+   * @param path
+   * @param reactProps
+   * @param component
+   * @param renderedHtml
+   * @param serverRendering
+   * @return
+   */
+  private String wrapHtml(String path, JSONObject reactProps, String component, String renderedHtml, boolean serverRendering) {
+    String jsonProps = StringEscapeUtils.escapeHtml4(reactProps.toString());
     String allHtml = "<div data-react-server=\"" + String.valueOf(serverRendering) + "\" data-react=\"app\" data-react-id=\"" + path + "_component\">"
-        + renderedHtml + "</div>" + "<textarea id=\"" + path + "_component\" style=\"display:none;\">" + reactProps.toString() + "</textarea>";
-    allHtml+="<script>if (typeof AemGlobal!=='undefined') AemGlobal.componentManager.updateComponent(\""+path+"_component\")</script>";
-    
+        + renderedHtml + "</div>" + "<textarea id=\"" + path + "_component\" style=\"display:none;\">" + jsonProps + "</textarea>";
+    allHtml += "<script>if (typeof AemGlobal!=='undefined') AemGlobal.componentManager.updateComponent(\"" + path + "_component\")</script>";
+
     return allHtml;
   }
-/**
- * render the react markup
- * @param reactProps props
- * @param component component name
- * @return
- */
+
+  /**
+   * render the react markup
+   *
+   * @param reactProps
+   *          props
+   * @param component
+   *          component name
+   * @return
+   */
   private String renderReactMarkup(JSONObject reactProps, String component) {
     JavascriptEngine javascriptEngine;
     try {
@@ -170,7 +178,9 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       JSONObject reactProps = new JSONObject();
       reactProps.put("resource", resourceAsJson);
       reactProps.put("component", config.getComponent());
-      // TODO remove depth and provide custom service to get the resource as json without spcifying the depth. This makes it possible to privde custom loader.
+      // TODO remove depth and provide custom service to get the resource as
+      // json without spcifying the depth. This makes it possible to privde
+      // custom loader.
       reactProps.put("depth", config.getDepth());
       reactProps.put("wcmmode", getWcmMode(request));
       reactProps.put("path", resource.getPath());
@@ -181,18 +191,22 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
   }
 
-
   private String getWcmMode(SlingHttpServletRequest request) {
     return WCMMode.fromRequest(request).name().toLowerCase();
   }
-/**
- * parse the rendered html and render it as handlebars template. The only relevant dynamic part will be the helper 
- * that includes a given resource
- * <pre><code>{{{include-resource path resourceType}}}}</code></pre>
- * @param html
- * @param context
- * @return
- */
+
+  /**
+   * parse the rendered html and render it as handlebars template. The only
+   * relevant dynamic part will be the helper that includes a given resource
+   *
+   * <pre>
+   * <code>{{{include-resource path resourceType}}}}</code>
+   * </pre>
+   *
+   * @param html
+   * @param context
+   * @return
+   */
   private String postRender(String html, final ScriptContext context) {
     Template template;
     try {
@@ -223,25 +237,26 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
   /**
    * get an included resource and write it to the writer.
+   *
    * @param out
-   * @param script really the path
+   * @param script
+   *          really the path
    * @param dispatcherOptions
-   * @param resourceType 
+   * @param resourceType
    * @param context
    */
   private void includeResource(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context) {
-    
-    
+
     Bindings bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
     if (StringUtils.isEmpty(script)) {
       LOG.error("Script path cannot be empty");
     } else {
       SlingHttpServletResponse customResponse = new PrintWriterResponseWrapper(out, (SlingHttpServletResponse) bindings.get(SlingBindings.RESPONSE));
       SlingHttpServletRequest request = (SlingHttpServletRequest) bindings.get(SlingBindings.REQUEST);
-      
+
       script = normalizePath(request, script);
       ComponentContext componentContext = WCMUtils.getComponentContext(request);
-      EditContext editContext=componentContext.getEditContext();
+      EditContext editContext = componentContext.getEditContext();
 
       Resource includeRes = request.getResourceResolver().resolve(script);
       if (includeRes instanceof NonExistingResource || includeRes.isResourceType(Resource.RESOURCE_TYPE_NON_EXISTING)) {
@@ -253,14 +268,14 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
           opts.setForceResourceType(resourceType);
         }
         IncludeOptions options = IncludeOptions.getOptions(request, true);
-        if (editContext==null) {
-          // this is the editable.refresh() case where the root should not be decorated but all others.
+        if (editContext == null) {
+          // this is the editable.refresh() case where the root should not be
+          // decorated but all others.
           // TODO better move this code up to the eval method
           options.forceEditContext(true);
           options.setDecorationTagName("");
           opts.setReplaceSelectors("");
         }
-        
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
         dispatcher.include(request, customResponse);
