@@ -10,9 +10,8 @@ The basic javascript functionality is located in a separate [project](//www.gith
 
 # STATUS
 
----|---
-Version | 0.1
-API | unstable
+- Version: 0.1
+- API is unstable
 
 # Why React and AEM?
 
