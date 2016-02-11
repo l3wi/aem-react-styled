@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Aem from "aem-react-js/aem";
+import EditDialog from "../EditDialog";
 import CqUtils from "aem-react-js/CqUtils";
 import { ResourceInclude }  from "aem-react-js/include";
 
@@ -44,7 +45,8 @@ export class Toggle extends Aem.AemComponent<ToggleProps, any> {
 
         return (
             <div className="toggle">
-                <Aem.CqEdit editConfig={editConfig} wcmmode={this.props.wcmmode} path={this.props.path} resourceType={resourceType}/>
+                <EditDialog wcmmode={this.props.wcmmode} path={this.props.path}
+                                 resourceType={resourceType}></EditDialog>
                 <input ref="toggleRadio" type="radio" className="toggle-input-state" checked={this.props.active} id={this.props.path}
                        name={this.props.groupId} onChange={onChange}/>
                 <label className="toggle-input-toggle toggle-input-js-toggle"

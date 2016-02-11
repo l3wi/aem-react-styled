@@ -47,7 +47,8 @@
 														jackson-databind,
 														handlebars,
 														antlr4-runtime,
-														rhino
+														rhino,
+														jsoup
 												</Embed-Dependency>
 												<Export-Package>com.sinnerschrader.aem.react.*</Export-Package>
 												<Sling-Model-Packages />
@@ -78,10 +79,10 @@
 												<groupId>org.apache.sling</groupId>
 												<artifactId>maven-sling-plugin</artifactId>
 												<configuration>
-														<!-- Note that this requires /apps/website/install to exist!! -->
+														<!-- Note that this requires /apps/react-demo/install to exist!! -->
 														<!-- This is typically the case when ui.apps is deployed first -->
-														<!-- Otherwise, create /apps/website/install manually (CRXDE|Lite) -->
-														<slingUrlSuffix>/apps/website/install/</slingUrlSuffix>
+														<!-- Otherwise, create /apps/react-demo/install manually (CRXDE|Lite) -->
+														<slingUrlSuffix>/apps/react-demo/install/</slingUrlSuffix>
 														<failOnError>true</failOnError>
 												</configuration>
 										</plugin>
@@ -218,6 +219,11 @@
 				  <groupId>org.apache.sling</groupId>
 				  <artifactId>org.apache.sling.commons.json</artifactId>
 				  <version>2.0.10</version>
+				</dependency>
+				<dependency>
+						<groupId>org.jsoup</groupId>
+						<artifactId>jsoup</artifactId>
+						<version>1.8.3</version>
 				</dependency>
 		</dependencies>
 </project>

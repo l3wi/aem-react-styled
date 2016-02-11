@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -29,6 +30,9 @@ import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.sling.JsonObjectCreator;
 import org.apache.sling.scripting.api.AbstractSlingScriptEngine;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,9 +80,13 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       SlingHttpServletRequest request = (SlingHttpServletRequest) bindings.get(SlingBindings.REQUEST);
       Resource resource = request.getResource();
 
+      boolean dialog = Arrays.asList(request.getRequestPathInfo().getSelectors()).contains("dialog");
+
       ReactComponentConfig config = parseReactComponentConfig(reader);
 
-      if (config.isReload()) {
+      if (config.isReload() && dialog) {
+        context.getWriter().write("oops");
+      } else if (config.isReload()) {
         // This is a react child component. The page needs to be rerendered
         // completely. In the future we might ask the parent to reload its
         // content via ajax.
@@ -219,8 +227,21 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         public CharSequence apply(String path, Options options) throws IOException {
           String resourceType = options.param(0);
           StringWriter writer = new StringWriter();
-          includeResource(new PrintWriter(writer), path, null, resourceType, context);
+          includeResource(new PrintWriter(writer), path, null, resourceType, context, false);
           return writer.toString();
+        }
+      });
+      handlebars.registerHelper("edit-dialog", new Helper<String>() {
+
+        @Override
+        public CharSequence apply(String path, Options options) throws IOException {
+          String resourceType = options.param(0);
+          StringWriter writer = new StringWriter();
+          includeResource(new PrintWriter(writer), path, null, resourceType, context, true);
+          String out = writer.toString();
+          Document document = Jsoup.parseBodyFragment(out);
+          Elements script = document.getElementsByTag("script");
+          return script.html();
         }
       });
       template = handlebars.compileInline(html);
@@ -245,7 +266,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
    * @param resourceType
    * @param context
    */
-  private void includeResource(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context) {
+  private void includeResource(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context, boolean dialog) {
 
     Bindings bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
     if (StringUtils.isEmpty(script)) {
@@ -262,10 +283,14 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       if (includeRes instanceof NonExistingResource || includeRes.isResourceType(Resource.RESOURCE_TYPE_NON_EXISTING)) {
         includeRes = new SyntheticResource(request.getResourceResolver(), script, resourceType);
       }
+
       try {
         RequestDispatcherOptions opts = new RequestDispatcherOptions(dispatcherOptions);
         if (StringUtils.isNotEmpty(resourceType)) {
           opts.setForceResourceType(resourceType);
+        }
+        if (dialog) {
+          opts.setAddSelectors("dialog");
         }
         IncludeOptions options = IncludeOptions.getOptions(request, true);
         if (editContext == null) {
@@ -279,6 +304,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
         dispatcher.include(request, customResponse);
+
       } catch (Exception e) {
         LOG.error("Failed to include resource {}", script, e);
       }
