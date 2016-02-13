@@ -30,19 +30,19 @@ export default class Accordion extends Container.StackContainer {
 
         let activeIndex = this.state.activeIndex;
 
-        let contentModel: Container.ContentModel[] = this.getContentModel(content);
-
         let toggles: React.ReactElement<any>[] = [];
 
-        contentModel.forEach(function (model: Container.ContentModel, childIdx: number): void {
-            toggles.push(<Toggle groupId={this.props.path} onChange={function():void {this.onChange(childIdx);}.bind(this)}
-                                 key={model.node} node={ model.node }
-                                 resourceType={model.resourceType}
+        let children: any = Aem.ResourceUtils.getChildren(content);
+        Object.keys(children).forEach((node: string, childIdx: number) => {
+            toggles.push(<Toggle path={node}
+                                 groupId={this.props.path}
+                                 onChange={function():void {this.onChange(childIdx);}.bind(this)}
+                                 key={node}
                                  cqHidden={this.props.cqHidden}
-                                 active={ activeIndex === childIdx } label={ model.label }
-                                 path={ this.props.path + "/" + model.node }
-                                 ></Toggle>);
+                                 active={ activeIndex === childIdx }
+            ></Toggle>);
         }, this);
+
 
         let newZone: React.ReactElement<any> = null;
         if (this.isWcmEditable()) {
