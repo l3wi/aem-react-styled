@@ -8,11 +8,6 @@ interface ReactTextProps extends Aem.Resource {
 
 export default class Text extends Aem.ResourceComponent<ReactTextProps, Aem.ResourceProps<ReactTextProps>,  any> {
 
-    constructor(props: Aem.ResourceProps<ReactTextProps>) {
-        super(props);
-
-    }
-
     public renderBody(): React.ReactElement<any> {
         let text: string = this.getResource().propText;
         if (this.isWcmEditable() && !text) {

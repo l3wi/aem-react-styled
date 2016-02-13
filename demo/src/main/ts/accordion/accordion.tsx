@@ -38,7 +38,6 @@ export default class Accordion extends Container.StackContainer {
                                  groupId={this.props.path}
                                  onChange={function():void {this.onChange(childIdx);}.bind(this)}
                                  key={node}
-                                 cqHidden={this.props.cqHidden}
                                  active={ activeIndex === childIdx }
             ></Toggle>);
         }, this);

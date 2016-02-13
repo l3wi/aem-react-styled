@@ -1,6 +1,5 @@
 import * as React from "react";
 import * as Aem from "aem-react-js/aem";
-import {EditDialog}  from "aem-react-js/aem";
 import CqUtils from "aem-react-js/CqUtils";
 import { ResourceInclude }  from "aem-react-js/include";
 
@@ -10,7 +9,6 @@ interface ToggleProps extends Aem.ResourceProps<any> {
     key: string;
     groupId: string;
     onChange(): void;
-    cqHidden?: boolean;
 }
 
 export class Toggle extends Aem.ResourceComponent<any, ToggleProps, any> {
@@ -24,20 +22,10 @@ export class Toggle extends Aem.ResourceComponent<any, ToggleProps, any> {
         let label: string = this.getResource().label || "Set a Label";
 
         if (this.isWcmEditable()) {
-            this.setAllEditableVisible(this.getPath(), this.props.active && !this.props.cqHidden);
-            CqUtils.setVisible(this.getPath() + "/togglepar/*", this.props.active && !this.props.cqHidden, true);
+            this.setAllEditableVisible(this.getPath(), this.props.active && !this.isCqHidden());
+            CqUtils.setVisible(this.getPath() + "/togglepar/*", this.props.active && !this.isCqHidden(), true);
         }
 
-        let resourceType: string = this.getResourceType();
-
-        // TODO CqEdit should be executed on client side only. also element should be set to outer div
-
-
-        let editConfig = {
-            "listeners": {
-                "afterdelete": "REFRESH_PARENT"
-            }
-        };
 
 
         return (
