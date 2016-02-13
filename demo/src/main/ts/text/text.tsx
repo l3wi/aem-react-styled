@@ -13,7 +13,7 @@ export default class Text extends Aem.ResourceComponent<ReactTextProps, Aem.Reso
 
     }
 
-    public render(): React.ReactElement<any> {
+    public renderBody(): React.ReactElement<any> {
         let text: string = this.getResource().propText;
         if (this.isWcmEditable() && !text) {
             text = "please enter a text";

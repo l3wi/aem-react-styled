@@ -84,7 +84,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
       ReactComponentConfig config = parseReactComponentConfig(reader);
 
-      if (config.isReload() && dialog) {
+      if (dialog) {
         context.getWriter().write("oops");
       } else if (config.isReload()) {
         // This is a react child component. The page needs to be rerendered
@@ -192,6 +192,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       reactProps.put("depth", config.getDepth());
       reactProps.put("wcmmode", getWcmMode(request));
       reactProps.put("path", resource.getPath());
+      reactProps.put("root", true);
       return reactProps;
     } catch (JSONException e) {
       throw new TechnicalException("cannot create react props", e);

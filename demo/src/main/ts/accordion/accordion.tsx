@@ -22,7 +22,7 @@ export default class Accordion extends Container.StackContainer {
         }
     }
 
-    public render(): React.ReactElement<any> {
+    public renderBody(): React.ReactElement<any> {
         let content: any = {};
         if (this.props.resource) {
             content = this.props.resource;
@@ -41,18 +41,18 @@ export default class Accordion extends Container.StackContainer {
                                  cqHidden={this.props.cqHidden}
                                  active={ activeIndex === childIdx } label={ model.label }
                                  path={ this.props.path + "/" + model.node }
-                                 wcmmode={ this.props.wcmmode }></Toggle>);
+                                 ></Toggle>);
         }, this);
 
         let newZone: React.ReactElement<any> = null;
         if (this.isWcmEditable()) {
             let resourceType = this.getResourceType() + "/new";
-            newZone = <ResourceInclude wcmmode={this.props.wcmmode} element="div" hidden={true} path={ this.props.path + "/*" }
+            newZone = <ResourceInclude element="div" hidden={true} path={ this.props.path + "/*" }
                                       resourceType={resourceType}></ResourceInclude>;
         }
         return (
             <div>
-                <Aem.EditMarker wcmmode={this.props.wcmmode} label="Accordion"/>
+                <Aem.EditMarker  label="Accordion"/>
                 { toggles }
                 { newZone }
             </div>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Aem from "aem-react-js/aem";
-import EditDialog from "../EditDialog";
+import {EditDialog}  from "aem-react-js/aem";
 import CqUtils from "aem-react-js/CqUtils";
 import { ResourceInclude }  from "aem-react-js/include";
 
@@ -45,7 +45,7 @@ export class Toggle extends Aem.AemComponent<ToggleProps, any> {
 
         return (
             <div className="toggle">
-                <EditDialog wcmmode={this.props.wcmmode} path={this.props.path}
+                <EditDialog  path={this.props.path}
                                  resourceType={resourceType}></EditDialog>
                 <input ref="toggleRadio" type="radio" className="toggle-input-state" checked={this.props.active} id={this.props.path}
                        name={this.props.groupId} onChange={onChange}/>
@@ -53,7 +53,7 @@ export class Toggle extends Aem.AemComponent<ToggleProps, any> {
                        htmlFor={this.props.path}>{label}
                 </label>
                 <div className="toggle-input-content">
-                    <ResourceInclude wcmmode={this.props.wcmmode} path={this.props.path + "/togglepar"}
+                    <ResourceInclude  path={this.props.path + "/togglepar"}
                                      resourceType="/libs/foundation/components/parsys"></ResourceInclude>
                 </div>
             </div>
