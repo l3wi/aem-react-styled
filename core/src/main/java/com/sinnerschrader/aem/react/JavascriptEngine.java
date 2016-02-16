@@ -30,6 +30,14 @@ public class JavascriptEngine {
   private static final Logger LOGGER = LoggerFactory.getLogger(JavascriptEngine.class);
 
   public static class Console {
+    public void debug(String statement) {
+      LOGGER.debug(statement);
+    }
+
+    public void debug(String statement, Object error) {
+      LOGGER.debug(statement, error);
+    }
+
     public void log(String statement) {
       LOGGER.info(statement);
     }
@@ -52,6 +60,14 @@ public class JavascriptEngine {
 
     public void error(String statement, Object error) {
       LOGGER.error(statement, error);
+    }
+
+    public void warn(String statement) {
+      LOGGER.warn(statement);
+    }
+
+    public void warn(String statement, Object error) {
+      LOGGER.warn(statement, error);
     }
 
   }
@@ -107,7 +123,7 @@ public class JavascriptEngine {
    * <pre>
    * <code>AemGlobal.renderReactComponent(component,json) </code>
    * </pre>
-   * 
+   *
    * in the javascript context.
    *
    * @param component

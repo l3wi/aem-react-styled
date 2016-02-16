@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Aem from "aem-react-js/aem";
-import {Toggle} from "./toggle";
+import {AccordionElement} from "./accordion-element";
 import * as Container from "aem-react-js/container";
 import {ResourceInclude} from "aem-react-js/include";
 
@@ -34,12 +34,12 @@ export default class Accordion extends Container.StackContainer {
 
         let children: any = Aem.ResourceUtils.getChildren(content);
         Object.keys(children).forEach((node: string, childIdx: number) => {
-            toggles.push(<Toggle path={node}
+            toggles.push(<AccordionElement path={node}
                                  groupId={this.props.path}
                                  onChange={function():void {this.onChange(childIdx);}.bind(this)}
                                  key={node}
                                  active={ activeIndex === childIdx }
-            ></Toggle>);
+            ></AccordionElement>);
         }, this);
 
 

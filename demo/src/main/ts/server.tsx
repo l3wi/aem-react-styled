@@ -1,17 +1,19 @@
-import * as component from "aem-react-js/ComponentManager";
-
-// import all react components here
-import Text from "./text/text";
-import Accordion from "./accordion/accordion";
-import Embedded from "./embedded/embedded";
+import {ComponentManager} from "aem-react-js/ComponentManager";
+import RootComponentRegistry from "aem-react-js/RootComponentRegistry";
+import componentRegistry from "./componentRegistry";
 
 
-component.ComponentManager.init({server: true});
-let componentManager = component.ComponentManager.INSTANCE;
+let rootComponentRegistry: RootComponentRegistry = new RootComponentRegistry();
 
-const comps: { [name: string]: any; } = {
-    // insert your react component classes here!
-    Text, Accordion, Embedded
-};
-componentManager.setComponents(comps);
+
+rootComponentRegistry.add(componentRegistry);
+rootComponentRegistry.init();
+let componentManager: ComponentManager = new ComponentManager(rootComponentRegistry);
+
+declare var AemGlobal: any;
+if (typeof AemGlobal === "undefined") {
+    throw "this is not the server side AEM context";
+}
+AemGlobal.renderReactComponent = componentManager.renderReactComponent.bind(componentManager);
+AemGlobal.componentManager = componentManager;
 

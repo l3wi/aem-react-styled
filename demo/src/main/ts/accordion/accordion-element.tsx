@@ -11,7 +11,7 @@ interface ToggleProps extends Aem.ResourceProps<any> {
     onChange(): void;
 }
 
-export class Toggle extends Aem.ResourceComponent<any, ToggleProps, any> {
+export class AccordionElement extends Aem.ResourceComponent<any, ToggleProps, any> {
 
 
     public renderBody(): React.ReactElement<any> {
@@ -45,3 +45,5 @@ export class Toggle extends Aem.ResourceComponent<any, ToggleProps, any> {
 
     }
 }
+
+

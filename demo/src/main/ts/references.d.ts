@@ -8,5 +8,5 @@ interface Window {
   ReactComponents: {
     [name: string]: any
   };
-  initReactComponents(): void;
+  AemGlobal: any;
 }

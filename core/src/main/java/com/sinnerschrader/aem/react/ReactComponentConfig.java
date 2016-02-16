@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * This is the configuration of an aem component.
- * 
+ *
  * @author stemey
  *
  */
@@ -21,15 +21,16 @@ public class ReactComponentConfig {
 
   /**
    * The components props is the jcr node.
-   * 
-   * @return the depth determines the number of levels in the jcr node tree and convert to json.
+   *
+   * @return the depth determines the number of levels in the jcr node tree and
+   *         convert to json.
    */
   public int getDepth() {
     return depth;
   }
 
   /**
-   * 
+   *
    * @return name of the react component
    */
   public String getComponent() {
@@ -37,8 +38,9 @@ public class ReactComponentConfig {
   }
 
   /**
-   * 
-   * @return true if the component includes resources and needs to be postprocessed.
+   *
+   * @return true if the component includes resources and needs to be
+   *         postprocessed.
    */
   public boolean isPostRender() {
     return postRender;
