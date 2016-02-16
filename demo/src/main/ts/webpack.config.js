@@ -24,7 +24,7 @@ console.log("Webpack build for '" + process.env.NODE_ENV + "' -> " + targetFileN
 
 var entries = [];
 if (!serverJs) {
-    entries.push('./website.tsx');
+    entries.push('./client.tsx');
 } else {
     entries.push('./server.tsx');
 }

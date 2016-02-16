@@ -1,17 +1,17 @@
 import * as React from "react";
-import * as Aem from "aem-react-js/aem";
-import {AccordionElement} from "./accordion-element";
+import * as resource from "aem-react-js/component/ResourceComponent";
+import AccordionElement from "./accordion-element";
 import * as Container from "aem-react-js/container";
 import {ResourceInclude} from "aem-react-js/include";
-
+import {ResourceUtils} from "aem-react-js/ResourceUtils";
+import EditMarker from "aem-react-js/component/EditMarker";
 
 export default class Accordion extends Container.StackContainer {
 
 
-    constructor(props: Aem.ResourceProps<Aem.Resource>) {
+    constructor(props: resource.ResourceProps<resource.Resource>) {
         super(props);
         this.state = {activeIndex: 0};
-        Aem.Cq.register(this);
     }
 
     public onChange(childIdx: number): void {
@@ -32,7 +32,7 @@ export default class Accordion extends Container.StackContainer {
 
         let toggles: React.ReactElement<any>[] = [];
 
-        let children: any = Aem.ResourceUtils.getChildren(content);
+        let children: any = ResourceUtils.getChildren(content);
         Object.keys(children).forEach((node: string, childIdx: number) => {
             toggles.push(<AccordionElement path={node}
                                  groupId={this.props.path}
@@ -51,7 +51,7 @@ export default class Accordion extends Container.StackContainer {
         }
         return (
             <div>
-                <Aem.EditMarker  label="Accordion"/>
+                <EditMarker  label="Accordion"/>
                 { toggles }
                 { newZone }
             </div>

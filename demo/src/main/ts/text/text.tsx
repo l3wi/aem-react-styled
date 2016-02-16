@@ -1,12 +1,12 @@
 import * as React from "react";
-import * as Aem from "aem-react-js/aem";
+import * as resource from "aem-react-js/component/ResourceComponent";
 
-interface ReactTextProps extends Aem.Resource {
+interface ReactTextProps extends resource.Resource {
     propText: string;
 }
 
 
-export default class Text extends Aem.ResourceComponent<ReactTextProps, Aem.ResourceProps<ReactTextProps>,  any> {
+export default class Text extends resource.ResourceComponent<ReactTextProps, resource.ResourceProps<ReactTextProps>,  any> {
 
     public renderBody(): React.ReactElement<any> {
         let text: string = this.getResource().propText;

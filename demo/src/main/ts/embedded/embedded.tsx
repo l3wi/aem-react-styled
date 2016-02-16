@@ -1,13 +1,13 @@
 import * as React from "react";
-import * as Aem from "aem-react-js/aem";
+import * as resource from "aem-react-js/component/ResourceComponent";
 import Text from "../text/text";
 
 
-export interface EmbeddedResource extends Aem.Resource {
+export interface EmbeddedResource extends resource.Resource {
     description: string;
 }
 
-export default class Embedded extends Aem.ResourceComponent<EmbeddedResource, Aem.ResourceProps<EmbeddedResource>, any> {
+export default class Embedded extends resource.ResourceComponent<EmbeddedResource, resource.ResourceProps<EmbeddedResource>, any> {
 
      public renderBody(): React.ReactElement<any> {
         return (

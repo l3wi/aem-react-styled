@@ -1,17 +1,17 @@
 import * as React from "react";
-import * as Aem from "aem-react-js/aem";
+import * as resource from "aem-react-js/component/ResourceComponent";
 import CqUtils from "aem-react-js/CqUtils";
 import { ResourceInclude }  from "aem-react-js/include";
 
 
-interface ToggleProps extends Aem.ResourceProps<any> {
+interface AccordionElementProps extends resource.ResourceProps<any> {
     active: boolean;
     key: string;
     groupId: string;
     onChange(): void;
 }
 
-export class AccordionElement extends Aem.ResourceComponent<any, ToggleProps, any> {
+export default class AccordionElement extends resource.ResourceComponent<any, AccordionElementProps, any> {
 
 
     public renderBody(): React.ReactElement<any> {

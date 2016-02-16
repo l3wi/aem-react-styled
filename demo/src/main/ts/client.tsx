@@ -1,4 +1,4 @@
-import {ComponentManager} from "aem-react-js/ComponentManager";
+import ComponentManager from "aem-react-js/ComponentManager";
 import RootComponentRegistry from "aem-react-js/RootComponentRegistry";
 import componentRegistry from "./componentRegistry";
 
