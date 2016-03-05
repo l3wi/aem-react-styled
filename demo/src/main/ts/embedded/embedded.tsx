@@ -12,9 +12,11 @@ export default class Embedded extends resource.ResourceComponent<EmbeddedResourc
      public renderBody(): React.ReactElement<any> {
         return (
             <div>
-                <span>Embedded</span>
                 <span>{this.getResource().description}</span>
-                <Text path="text"></Text>
+                <div>
+                    <span>Here comes the embedded text:</span><br/>
+                    <Text path="text"></Text>
+                </div>
             </div>
         );
     }
