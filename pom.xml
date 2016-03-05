@@ -12,7 +12,7 @@
   <groupId>com.sinnerschrader.aem.react</groupId>
   <artifactId>aem-react</artifactId>
   <packaging>pom</packaging>
-  <version>0.1.2</version>
+  <version>0.1.3-SNAPSHOT</version>
   <description>demo site</description>
 
   <modules>
@@ -24,7 +24,7 @@
     <connection>scm:git://github.com/sinnerschrader/aem-react.git</connection>
     <developerConnection>scm:git:git@github.com:sinnerschrader/aem-react.git</developerConnection>
     <url>https://github.com/sinnerschrader/aem-react.git</url>
-    <tag>aem-react-0.1.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
