@@ -1,9 +1,10 @@
 {
-  "name": "website",
+  "name": "demo",
+  "private": true,
   "version": "0.2.0",
   "main": "index.js",
   "config": {
-    "aemhost": "localhost"
+    "aemhost": "local.website"
   },
   "scripts": {
     "tsd": "tsd",

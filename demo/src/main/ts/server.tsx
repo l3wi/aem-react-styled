@@ -12,7 +12,7 @@ let serverRenderer: ServerRenderer = new ServerRenderer(rootComponentRegistry);
 
 declare var AemGlobal: any;
 if (typeof AemGlobal === "undefined") {
-    throw "this is not the server side AEM context";
+    throw "this is not the server side AEM javascript context";
 }
 AemGlobal.renderReactComponent = serverRenderer.renderReactComponent.bind(serverRenderer);
-
+AemGlobal.registry = rootComponentRegistry;

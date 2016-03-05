@@ -16,3 +16,5 @@ componentManager.initReactComponents();
 if (typeof window === "undefined") {
     throw "this is not the browser";
 }
+
+window.AemGlobal = {componentManager: componentManager};

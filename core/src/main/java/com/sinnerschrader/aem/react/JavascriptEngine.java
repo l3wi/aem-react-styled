@@ -5,6 +5,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 
+import javax.script.Bindings;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -143,6 +144,21 @@ public class JavascriptEngine {
     } catch (NoSuchMethodException | ScriptException e) {
       throw new TechnicalException("cannot render react on server", e);
     }
+  }
+
+  public boolean isReactComponent(String resourceType) {
+    Invocable invocable = ((Invocable) engine);
+    try {
+      Bindings AemGlobal = (Bindings) engine.get("AemGlobal");
+      Object component = invocable.invokeMethod(AemGlobal.get("registry"), "getComponent", resourceType);
+      return component != null;
+    } catch (NoSuchMethodException | ScriptException e) {
+      throw new TechnicalException("cannot render react on server", e);
+    }
+  }
+
+  public ScriptEngine getEngine() {
+    return engine;
   }
 
   /**

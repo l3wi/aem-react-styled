@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        cq:lastModified="{Date}2016-02-17T06:40:48.721Z"
+        cq:lastModifiedBy="admin"
+        cq:template="/apps/react-demo/templates/page"
+        jcr:primaryType="cq:PageContent"
+        jcr:title="An example for embedding react component"
+        sling:resourceType="react-demo/pages/page">
+        <par
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="wcm/foundation/components/parsys">
+            <embedded
+                jcr:created="{Date}2016-02-16T06:15:13.240Z"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2016-02-17T06:39:33.419Z"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="react-demo/components/embedded"
+                description="Hallo">
+                <text
+                    jcr:lastModified="{Date}2016-02-17T06:40:02.875Z"
+                    jcr:lastModifiedBy="admin"
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="react-demo/components/text"
+                    propText="I am embedded"/>
+            </embedded>
+        </par>
+    </jcr:content>
+</jcr:root>

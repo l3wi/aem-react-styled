@@ -51,6 +51,10 @@ import com.sinnerschrader.aem.react.exception.TechnicalException;
 
 public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
+  public interface Command {
+    public Object execute(JavascriptEngine e);
+  }
+
   private static final String SERVER_RENDERING_DISABLED = "disabled";
   private static final String SERVER_RENDERING_PARAM = "serverRendering";
   private static final Logger LOG = LoggerFactory.getLogger(ReactScriptEngine.class);
@@ -84,12 +88,15 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
       ReactComponentConfig config = parseReactComponentConfig(reader);
 
+      String rootPath = this.getRootReactComponent(resource).getPath();
+
       if (dialog) {
-        context.getWriter().write("oops");
-      } else if (config.isReload()) {
+        context.getWriter().write("");
+      } else if (isPartialRequest(resource, request) && !rootPath.equals(resource.getPath())) {
         // This is a react child component. The page needs to be rerendered
         // completely. In the future we might ask the parent to reload its
         // content via ajax.
+
         String script = "<script>AemGlobal.componentManager.reloadRootInCq('" + resource.getPath() + "')</script>";
         context.getWriter().write(script);
       } else {
@@ -120,6 +127,22 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
   }
 
+  private Resource getRootReactComponent(Resource resource) {
+    Resource root = resource;
+    while (isReactComponent(root.getParent())) {
+      root = root.getParent();
+    }
+    return root;
+  }
+
+  private boolean isReactComponent(Resource resource) {
+    return executeInJs(engine -> engine.isReactComponent(resource.getResourceType()));
+  }
+
+  private boolean isPartialRequest(Resource resource, SlingHttpServletRequest request) {
+    return request.getPathInfo().startsWith(resource.getPath());
+  }
+
   /**
    * wrap the rendered react markup with the teaxtarea that contains the
    * component's props.
@@ -138,6 +161,27 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
     allHtml += "<script>if (typeof AemGlobal!=='undefined') AemGlobal.componentManager.updateComponent(\"" + path + "_component\")</script>";
 
     return allHtml;
+  }
+
+  public <V> V executeInJs(Command command) {
+    JavascriptEngine javascriptEngine;
+    try {
+      javascriptEngine = enginePool.borrowObject();
+      try {
+        if (reloadScripts) {
+          javascriptEngine.reloadScripts();
+        }
+        return (V) command.execute(javascriptEngine);
+      } finally {
+        enginePool.returnObject(javascriptEngine);
+      }
+    } catch (NoSuchElementException e) {
+      throw new TechnicalException("cannot get engine from pool", e);
+    } catch (IllegalStateException e) {
+      throw new TechnicalException("cannot return engine from pool", e);
+    } catch (Exception e) {
+      throw new TechnicalException("error rendering react markup", e);
+    }
   }
 
   /**

@@ -10,8 +10,9 @@ The basic javascript functionality is located in a separate [project](//www.gith
 
 # STATUS
 
-- Version: 0.1
+- Version: 0.2
 - API is unstable
+- TouchUI support limited
 
 # Why React and AEM?
 
