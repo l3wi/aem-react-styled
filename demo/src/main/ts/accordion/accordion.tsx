@@ -51,7 +51,7 @@ export default class Accordion extends Container.StackContainer {
         }
         return (
             <div>
-                <EditMarker  label="Accordion"/>
+                <EditMarker  label="Accordion"></EditMarker>
                 { toggles }
                 { newZone }
             </div>

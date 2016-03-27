@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as resource from "aem-react-js/component/ResourceComponent";
 import CqUtils from "aem-react-js/CqUtils";
-import { ResourceInclude }  from "aem-react-js/include";
+import ReactParsys  from "aem-react-js/component/ReactParsys";
 
 
 interface AccordionElementProps extends resource.ResourceProps<any> {
@@ -21,12 +21,12 @@ export default class AccordionElement extends resource.ResourceComponent<any, Ac
 
         let label: string = this.getResource().label || "Set a Label";
 
+        let visible: boolean = false;
         if (this.isWcmEditable()) {
-            this.setAllEditableVisible(this.getPath(), this.props.active && !this.isCqHidden());
-            CqUtils.setVisible(this.getPath() + "/togglepar/*", this.props.active && !this.isCqHidden(), true);
+            visible = this.props.active && !this.isCqHidden();
+            this.setAllEditableVisible(this.getPath(), visible);
+            CqUtils.setVisible(this.getPath() + "/togglepar/*", visible, true);
         }
-
-
 
         return (
             <div className="toggle">
@@ -36,8 +36,7 @@ export default class AccordionElement extends resource.ResourceComponent<any, Ac
                        htmlFor={this.getPath()}>{label}
                 </label>
                 <div className="toggle-input-content">
-                    <ResourceInclude  path={this.getPath() + "/togglepar"}
-                                     resourceType="/libs/foundation/components/parsys"></ResourceInclude>
+                    <ReactParsys path="togglepar" cqHidden={!visible}/>
                 </div>
             </div>
 

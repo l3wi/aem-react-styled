@@ -129,7 +129,8 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
   private Resource getRootReactComponent(Resource resource) {
     Resource root = resource;
-    while (isReactComponent(root.getParent())) {
+    // if resource is synthetic then parent will be null
+    while (root.getParent() != null && isReactComponent(root.getParent())) {
       root = root.getParent();
     }
     return root;
