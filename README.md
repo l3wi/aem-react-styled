@@ -55,6 +55,8 @@ git clone https://github.com/sinnerschrader/aem-react.git
 
 cd aem-react
 
+npm install tsd -g
+
 mvn clean install -PautoInstallPackage
 
 ```
