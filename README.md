@@ -61,6 +61,9 @@ mvn clean install -PautoInstallPackage
 
 ```
 
+For the authormode you need to load a javascript file:
+[react-cq.js](https://github.com/sinnerschrader/aem-react/tree/master/demo/src/main/content/jcr_root/etc/designs/react-demo/js/react-cq)
+
 Starting modifying the react components in demo/src/main/ts/
 
 See [README.md](//github.com/sinnerschrader/aem-react/blob/master/demo/src/main/ts/README.md)
