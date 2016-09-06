@@ -9,11 +9,6 @@ import java.io.Reader;
  *
  */
 public interface ScriptLoader {
-  /**
-   * load script
-   *
-   * @param nodePath
-   * @return the script
-   */
+
   public Reader loadJcrScript(String nodePath, String subServiceName);
 }

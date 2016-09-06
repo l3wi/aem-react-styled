@@ -95,11 +95,6 @@ public class JavascriptEngine {
     }
   }
 
-  /**
-   * initialize the nashorn engine and install the default scripts.
-   *
-   * @param loader
-   */
   public void initialize(ScriptCollectionLoader loader, Object sling) {
     ScriptEngineManager scriptEngineManager = new ScriptEngineManager(null);
     engine = scriptEngineManager.getEngineByName("nashorn");
@@ -139,21 +134,6 @@ public class JavascriptEngine {
 
   }
 
-  /**
-   * render the given react component. This will invoke
-   *
-   * <pre>
-   * <code>AemGlobal.renderReactComponent(component,json) </code>
-   * </pre>
-   *
-   * </code> in the javascript context.
-   *
-   * @param component
-   *          Name of the react component
-   * @param json
-   *          the props of the react component
-   * @return the rendered html
-   */
   public RenderResult render(String path, String resourceType, String wcmmode, Cqx cqx) {
 
     Invocable invocable = ((Invocable) engine);
@@ -189,10 +169,6 @@ public class JavascriptEngine {
     return engine;
   }
 
-  /**
-   * reload scripts and initialize. Call this during development before
-   * rendering.
-   */
   public void reloadScripts() {
     updateJavascriptLibrary();
 
