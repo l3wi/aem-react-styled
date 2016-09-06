@@ -4,7 +4,7 @@ import AemLink from "aem-react-js/router/AemLink";
 import {ResourceMapping} from "aem-react-js/router/ResourceMapping";
 import ServiceProxy from "aem-react-js/di/ServiceProxy";
 
-export default class StoresView extends AemComponent<any, any> {
+export default class CityListView extends AemComponent<any, any> {
 
 
     public render(): React.ReactElement<any> {

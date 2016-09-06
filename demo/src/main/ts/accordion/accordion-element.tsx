@@ -27,7 +27,7 @@ export default class AccordionElement extends resource.ResourceComponent<any, Ac
         let type: string = this.isWcmEnabled() ? "checkbox" : "radio";
         return (
             <div className="toggle">
-                <input ref="toggleRadio" type={type} className="toggle-input-state" checked={visible} id={this.getPath()}
+                <input ref="toggleRadio" type={type} className="toggle-input-state" disabled={this.isWcmEnabled()} checked={visible} id={this.getPath()}
                        name={this.props.groupId} onChange={onChange}/>
                 <label className="toggle-input-toggle toggle-input-js-toggle"
                        htmlFor={this.getPath()}>{label}
