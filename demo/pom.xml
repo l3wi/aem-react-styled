@@ -164,6 +164,11 @@
 														<artifactId>core</artifactId>
 														<target>/apps/react-demo/install</target>
 												</embedded>
+                         <embedded>
+                            <groupId>com.sinnerschrader.aem.react</groupId>
+                            <artifactId>democore</artifactId>
+                            <target>/apps/react-demo/install</target>
+                        </embedded>
                         <embedded>
                             <groupId>org.apache.commons</groupId>
                             <artifactId>commons-pool2</artifactId>
@@ -248,8 +253,14 @@
 				<dependency>
 						<groupId>com.sinnerschrader.aem.react</groupId>
 						<artifactId>core</artifactId>
-						<version>0.2.2-SNAPSHOT</version>
+						<version>${project.version}</version>
 				</dependency>
+
+        <dependency>
+            <groupId>com.sinnerschrader.aem.react</groupId>
+            <artifactId>democore</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 				<dependency>
 						<groupId>com.adobe.aem</groupId>

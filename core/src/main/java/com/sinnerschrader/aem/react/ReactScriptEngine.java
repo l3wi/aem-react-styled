@@ -26,6 +26,7 @@ import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceUtil;
 import org.apache.sling.api.resource.SyntheticResource;
 import org.apache.sling.api.scripting.SlingBindings;
+import org.apache.sling.commons.classloader.DynamicClassLoaderManager;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.commons.json.sling.JsonObjectCreator;
@@ -47,6 +48,9 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
+import com.sinnerschrader.aem.react.data.ModelFactory;
+import com.sinnerschrader.aem.react.data.OsgiServiceFinder;
+import com.sinnerschrader.aem.react.data.Sling;
 import com.sinnerschrader.aem.react.exception.TechnicalException;
 
 public class ReactScriptEngine extends AbstractSlingScriptEngine {
@@ -61,8 +65,16 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
   private ObjectPool<JavascriptEngine> enginePool;
   private boolean reloadScripts;
   private ObjectMapper mapper;
+  private OsgiServiceFinder finder;
+  private DynamicClassLoaderManager dynamicClassLoaderManager;
 
-  protected ReactScriptEngine(ScriptEngineFactory scriptEngineFactory, ObjectPool<JavascriptEngine> enginePool, boolean reloadScripts) {
+  public static class RenderResult {
+    public String html;
+    public String cache;
+  }
+
+  protected ReactScriptEngine(ScriptEngineFactory scriptEngineFactory, ObjectPool<JavascriptEngine> enginePool, boolean reloadScripts, OsgiServiceFinder finder,
+      DynamicClassLoaderManager dynamicClassLoaderManager) {
     super(scriptEngineFactory);
 
     this.mapper = new ObjectMapper();
@@ -70,7 +82,8 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
     this.enginePool = enginePool;
     this.reloadScripts = reloadScripts;
-
+    this.finder = finder;
+    this.dynamicClassLoaderManager = dynamicClassLoaderManager;
   }
 
   @Override
@@ -82,41 +95,53 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
       Bindings bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
       SlingHttpServletRequest request = (SlingHttpServletRequest) bindings.get(SlingBindings.REQUEST);
+      SlingHttpServletResponse response = (SlingHttpServletResponse) bindings.get(SlingBindings.RESPONSE);
+      boolean renderAsJson = Arrays.asList(request.getRequestPathInfo().getSelectors()).indexOf("json") >= 0;
       Resource resource = request.getResource();
 
       boolean dialog = Arrays.asList(request.getRequestPathInfo().getSelectors()).contains("dialog");
 
-      ReactComponentConfig config = parseReactComponentConfig(reader);
-
-      String rootPath = this.getRootReactComponent(resource).getPath();
-
       if (dialog) {
+        // just rendering to get the wrapper element and author mode js
         context.getWriter().write("");
-      } else if (isPartialRequest(resource, request) && !rootPath.equals(resource.getPath())) {
-        // This is a react child component. The page needs to be rerendered
-        // completely. In the future we might ask the parent to reload its
-        // content via ajax.
-
-        String script = "<script>AemGlobal.componentManager.reloadRootInCq('" + resource.getPath() + "')</script>";
-        context.getWriter().write(script);
-      } else {
-
-        JSONObject reactProps = createReactProps(config, request, resource);
-
-        String component = reactProps.getString("component");
-
-        String renderedHtml;
-        boolean serverRendering = !SERVER_RENDERING_DISABLED.equals(request.getParameter(SERVER_RENDERING_PARAM));
-        if (serverRendering) {
-          String reactMarkup = renderReactMarkup(reactProps, component);
-          renderedHtml = postRender(reactMarkup, context);
-        } else {
-          renderedHtml = "";
-        }
-        String allHtml = wrapHtml(resource.getPath(), reactProps, component, renderedHtml, serverRendering);
-
-        context.getWriter().write(allHtml);
+        return null;
       }
+
+      String renderedHtml;
+      boolean serverRendering = !SERVER_RENDERING_DISABLED.equals(request.getParameter(SERVER_RENDERING_PARAM));
+      String cacheString = null;
+      if (serverRendering) {
+        RenderResult result = renderReactMarkup(resource.getPath(), resource.getResourceType(), getWcmMode(request), context);
+        // TODO postrender should be performed if ncessary only.
+        renderedHtml = postRender(result.html, context);
+        cacheString = result.cache;
+      } else if (renderAsJson) {
+        // development mode: return cache with just the current resource.
+        JSONObject cache = new JSONObject();
+        JSONObject resources = new JSONObject();
+        JSONObject resourceEntry = new JSONObject();
+        resourceEntry.put("depth", -1);
+        // depth is inaccurate
+        resourceEntry.put("data", JsonObjectCreator.create(resource, -1));
+        resources.put(resource.getPath(), resourceEntry);
+        cache.put("resources", resources);
+        cacheString = cache.toString();
+        renderedHtml = "";
+      } else {
+        // initial rendering in development mode
+        renderedHtml = "";
+      }
+
+      String output;
+      if (renderAsJson) {
+        output = cacheString;
+        response.setContentType("application/json");
+      } else {
+        output = wrapHtml(resource.getPath(), resource, renderedHtml, serverRendering, getWcmMode(request), cacheString);
+
+      }
+
+      context.getWriter().write(output);
       return null;
 
     } catch (Exception e) {
@@ -155,11 +180,21 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
    * @param serverRendering
    * @return
    */
-  private String wrapHtml(String path, JSONObject reactProps, String component, String renderedHtml, boolean serverRendering) {
+  private String wrapHtml(String path, Resource resource, String renderedHtml, boolean serverRendering, String wcmmode, String cache) {
+    JSONObject reactProps = new JSONObject();
+    try {
+      if (cache != null) {
+        reactProps.put("cache", new JSONObject(cache));
+      }
+      reactProps.put("resourceType", resource.getResourceType());
+      reactProps.put("path", resource.getPath());
+      reactProps.put("wcmmode", wcmmode);
+    } catch (JSONException e) {
+      throw new TechnicalException("cannot create react props", e);
+    }
     String jsonProps = StringEscapeUtils.escapeHtml4(reactProps.toString());
     String allHtml = "<div data-react-server=\"" + String.valueOf(serverRendering) + "\" data-react=\"app\" data-react-id=\"" + path + "_component\">"
         + renderedHtml + "</div>" + "<textarea id=\"" + path + "_component\" style=\"display:none;\">" + jsonProps + "</textarea>";
-    allHtml += "<script>if (typeof AemGlobal!=='undefined') AemGlobal.componentManager.updateComponent(\"" + path + "_component\")</script>";
 
     return allHtml;
   }
@@ -185,6 +220,13 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
     }
   }
 
+  private Cqx createCqx(ScriptContext ctx) {
+    SlingHttpServletRequest request = (SlingHttpServletRequest) ctx.getBindings(ScriptContext.ENGINE_SCOPE).get(SlingBindings.REQUEST);
+
+    ClassLoader classLoader = dynamicClassLoaderManager.getDynamicClassLoader();
+    return new Cqx(new Sling(ctx), finder, new ModelFactory(classLoader, request));
+  }
+
   /**
    * render the react markup
    *
@@ -194,7 +236,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
    *          component name
    * @return
    */
-  private String renderReactMarkup(JSONObject reactProps, String component) {
+  private RenderResult renderReactMarkup(String path, String resourceType, String wcmmode, ScriptContext context) {
     JavascriptEngine javascriptEngine;
     try {
       javascriptEngine = enginePool.borrowObject();
@@ -202,9 +244,11 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         if (reloadScripts) {
           javascriptEngine.reloadScripts();
         }
-        return javascriptEngine.render(component, reactProps.toString());
+        return javascriptEngine.render(path, resourceType, wcmmode, createCqx(context));
       } finally {
+
         enginePool.returnObject(javascriptEngine);
+
       }
     } catch (NoSuchElementException e) {
       throw new TechnicalException("cannot get engine from pool", e);
@@ -212,37 +256,6 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       throw new TechnicalException("cannot return engine from pool", e);
     } catch (Exception e) {
       throw new TechnicalException("error rendering react markup", e);
-    }
-
-  }
-
-  private ReactComponentConfig parseReactComponentConfig(Reader reader) {
-    try {
-      return mapper.readValue(reader, ReactComponentConfig.class);
-    } catch (IOException e) {
-      throw new TechnicalException("react component config is invalid", e);
-    }
-  }
-
-  private JSONObject createReactProps(ReactComponentConfig config, SlingHttpServletRequest request, Resource resource) {
-    try {
-      int depth = config.getDepth();
-      JSONObject resourceAsJson = JsonObjectCreator.create(resource, depth);
-      JSONObject reactProps = new JSONObject();
-      reactProps.put("resource", resourceAsJson);
-      reactProps.put("component", config.getComponent());
-
-      reactProps.put("resourceType", resource.getResourceType());
-      // TODO remove depth and provide custom service to get the resource as
-      // json without spcifying the depth. This makes it possible to privde
-      // custom loader.
-      reactProps.put("depth", config.getDepth());
-      reactProps.put("wcmmode", getWcmMode(request));
-      reactProps.put("path", resource.getPath());
-      reactProps.put("root", true);
-      return reactProps;
-    } catch (JSONException e) {
-      throw new TechnicalException("cannot create react props", e);
     }
 
   }
@@ -275,7 +288,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         public CharSequence apply(String path, Options options) throws IOException {
           String resourceType = options.param(0);
           StringWriter writer = new StringWriter();
-          includeResource(new PrintWriter(writer), path, null, resourceType, context, false);
+          includeResource(new PrintWriter(writer), path, null, resourceType, context);
           return writer.toString();
         }
       });
@@ -285,7 +298,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         public CharSequence apply(String path, Options options) throws IOException {
           String resourceType = options.param(0);
           StringWriter writer = new StringWriter();
-          includeResource(new PrintWriter(writer), path, null, resourceType, context, true);
+          renderDialog(new PrintWriter(writer), path, null, resourceType, context);
           String out = writer.toString();
           Document document = Jsoup.parseBodyFragment(out);
           Elements script = document.getElementsByTag("script");
@@ -296,7 +309,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
     } catch (IOException e) {
       throw new TechnicalException("cannot compile template ", e);
     }
-    Map<String, String> ctx = new HashMap<String, String>();
+    Map<String, String> ctx = new HashMap<>();
     try {
       return template.apply(ctx);
     } catch (IOException e) {
@@ -314,7 +327,15 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
    * @param resourceType
    * @param context
    */
-  private void includeResource(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context, boolean dialog) {
+  private void includeResource(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context) {
+    includeResourceX(out, script, dispatcherOptions, resourceType, context, false);
+  }
+
+  private void renderDialog(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context) {
+    includeResourceX(out, script, dispatcherOptions, resourceType, context, true);
+  }
+
+  private void includeResourceX(PrintWriter out, String script, String dispatcherOptions, String resourceType, ScriptContext context, boolean dialog) {
 
     Bindings bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
     if (StringUtils.isEmpty(script)) {

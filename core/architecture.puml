@@ -1,0 +1,45 @@
+@startuml
+
+
+class ReactScriptEngineFactory {
+  scripts
+  scriptListener
+}
+ReactScriptEngineFactory ..> Script : invalidate
+
+ReactScriptEngineFactory -> ReactScriptEngine
+
+class ReactScriptEngine {
+  eval
+  includeResource
+}
+
+class JavascriptEnginePool {
+  borrow
+}
+
+ReactScriptEngine -> JavascriptEnginePool
+
+class JavascriptEngine {
+  logger
+  context
+  renderReactComponent(component, props)
+}
+
+JavascriptEngine o-- Script
+
+JavascriptEnginePool o-- JavascriptEngine
+
+class JcrUtils {
+  includeResource()
+}
+
+JavascriptEngine -> JcrUtils
+ReactScriptEngine -> JcrUtils
+
+class Script {
+  modified: boolean
+  resourcePath: string
+}
+
+@enduml 

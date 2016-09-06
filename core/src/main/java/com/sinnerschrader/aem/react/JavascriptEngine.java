@@ -1,12 +1,14 @@
 package com.sinnerschrader.aem.react;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.script.Bindings;
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -14,7 +16,9 @@ import javax.script.ScriptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sinnerschrader.aem.react.ReactScriptEngine.RenderResult;
 import com.sinnerschrader.aem.react.exception.TechnicalException;
+import com.sinnerschrader.aem.react.loader.HashedScript;
 import com.sinnerschrader.aem.react.loader.ScriptCollectionLoader;
 
 /**
@@ -27,6 +31,7 @@ import com.sinnerschrader.aem.react.loader.ScriptCollectionLoader;
 public class JavascriptEngine {
   private ScriptCollectionLoader loader;
   private ScriptEngine engine;
+  private Map<String, String> scriptChecksums;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JavascriptEngine.class);
 
@@ -95,22 +100,38 @@ public class JavascriptEngine {
    *
    * @param loader
    */
-  public void initialize(ScriptCollectionLoader loader) {
+  public void initialize(ScriptCollectionLoader loader, Object sling) {
     ScriptEngineManager scriptEngineManager = new ScriptEngineManager(null);
     engine = scriptEngineManager.getEngineByName("nashorn");
     engine.getContext().setErrorWriter(new Print());
     engine.getContext().setWriter(new Print());
     engine.put("console", new Console());
+    engine.put("Sling", sling);
     this.loader = loader;
+    scriptChecksums = new HashMap<>();
     updateJavascriptLibrary();
   }
 
   private void updateJavascriptLibrary() {
 
-    Iterator<Reader> iterator = loader.iterator();
+    // try {
+    // // TODO remove babel hack
+    // engine.eval("if (typeof global!=='undefined') delete
+    // global._babelPolyfill");
+    // } catch (ScriptException e) {
+    // throw new TechnicalException("cannot eval library script", e);
+    // }
+    Iterator<HashedScript> iterator = loader.iterator();
+    boolean reload = false;
     while (iterator.hasNext()) {
       try {
-        engine.eval(iterator.next());
+        HashedScript next = iterator.next();
+        String checksum = scriptChecksums.get(next.getId());
+        if (reload || checksum == null || !checksum.equals(next.getChecksum())) {
+          reload = true;
+          engine.eval(next.getScript());
+          scriptChecksums.put(next.getId(), next.getChecksum());
+        }
       } catch (ScriptException e) {
         throw new TechnicalException("cannot eval library script", e);
       }
@@ -125,7 +146,7 @@ public class JavascriptEngine {
    * <code>AemGlobal.renderReactComponent(component,json) </code>
    * </pre>
    *
-   * in the javascript context.
+   * </code> in the javascript context.
    *
    * @param component
    *          Name of the react component
@@ -133,14 +154,20 @@ public class JavascriptEngine {
    *          the props of the react component
    * @return the rendered html
    */
-  public String render(String component, String json) {
+  public RenderResult render(String path, String resourceType, String wcmmode, Cqx cqx) {
 
     Invocable invocable = ((Invocable) engine);
     try {
-      Object JSON = engine.get("JSON");
-      Object props = invocable.invokeMethod(JSON, "parse", json);
+      engine.getBindings(ScriptContext.ENGINE_SCOPE).put("Cqx", cqx);
+      // Object JSON = engine.get("JSON");
+      // Object props = invocable.invokeMethod(JSON, "parse", json);
       Object AemGlobal = engine.get("AemGlobal");
-      return (String) invocable.invokeMethod(AemGlobal, "renderReactComponent", component, props);
+      Object value = invocable.invokeMethod(AemGlobal, "renderReactComponent", path, resourceType, wcmmode);
+
+      RenderResult result = new RenderResult();
+      result.html = (String) ((Map<String, Object>) value).get("html");
+      result.cache = ((Map<String, Object>) value).get("state").toString();
+      return result;
     } catch (NoSuchMethodException | ScriptException e) {
       throw new TechnicalException("cannot render react on server", e);
     }
@@ -150,7 +177,8 @@ public class JavascriptEngine {
     Invocable invocable = ((Invocable) engine);
     try {
       Bindings AemGlobal = (Bindings) engine.get("AemGlobal");
-      Object component = invocable.invokeMethod(AemGlobal.get("registry"), "getComponent", resourceType);
+      Object registry = AemGlobal.get("registry");
+      Object component = invocable.invokeMethod(registry, "getComponent", resourceType);
       return component != null;
     } catch (NoSuchMethodException | ScriptException e) {
       throw new TechnicalException("cannot render react on server", e);
@@ -167,6 +195,7 @@ public class JavascriptEngine {
    */
   public void reloadScripts() {
     updateJavascriptLibrary();
+
   }
 
 }

@@ -30,6 +30,7 @@
 
   <modules>
     <module>core</module>
+    <module>democore</module>
     <module>demo</module>
   </modules>
   

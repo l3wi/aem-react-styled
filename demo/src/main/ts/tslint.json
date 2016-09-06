@@ -5,7 +5,7 @@
       "parameters",
       "statements"
     ],
-    "ban": false,
+    "ban": true,
     "class-name": true,
     "comment-format": [
       true,

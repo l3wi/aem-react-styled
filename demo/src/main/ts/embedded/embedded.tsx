@@ -7,7 +7,7 @@ export interface EmbeddedResource extends resource.Resource {
     description: string;
 }
 
-export default class Embedded extends resource.ResourceComponent<EmbeddedResource, resource.ResourceProps<EmbeddedResource>, any> {
+export default class Embedded extends resource.ResourceComponent<EmbeddedResource, resource.ResourceProps, any> {
 
      public renderBody(): React.ReactElement<any> {
         return (

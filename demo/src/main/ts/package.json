@@ -1,16 +1,16 @@
 {
   "name": "demo",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "index.js",
   "config": {
     "aemhost": "local.website"
   },
   "scripts": {
     "tsd": "tsd",
-    "postinstall": "tsd install",
+    "postinstallXX": "tsd install",
     "start": "webpack --env=development && webpack --env=development --server",
-    "watch": "echo \"deploying continuously to $npm_package_config_aemhost\" & webpack --env=development --watch & webpack --env=development --server --watch & webdav-sync --local_base ../content/jcr_root/ --remote_base http://admin:admin@$npm_package_config_aemhost:4502/crx/repository/crx.default/",
+    "watch": "echo \"deploying continuously to $npm_package_config_aemhost\" & webpack --env=development --watch & webpack --env=development --server --watch & webdav-sync --local_base ../content/jcr_root/ --remote_base http://admin:admin@$npm_package_config_aemhost:4602/crx/repository/crx.default/",
     "test": "mocha --compilers ts:espower-typescript/guess test/*.ts",
     "lint": "eslint . & tslint **/*.tsx",
     "prepublish": "npm test"
@@ -19,13 +19,21 @@
     "type": "git",
     "url": "https://github.com/sinnerschrader/aem-react.git"
   },
-  "private": true,
   "dependencies": {
+    "babel-polyfill": "^6.3.14",
     "classlist-polyfill": "^1.0.2",
+    "deep-equal": "^1.0.1",
+    "history": "^1.17.0",
+    "invariant": "^2.2.0",
     "node-libs-browser": "^0.5.3",
     "process": "^0.11.1",
-    "react": "^0.13.3",
-    "aem-react-js":"^0.2.1"
+    "query-string": "^3.0.0",
+    "aem-react-js": "^0.3.1",
+    "react-router": "^2.7.0",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "strict-uri-encode": "^1.1.0",
+    "warning": "^2.1.0"
   },
   "devDependencies": {
     "eslint": "^1.6.0",
@@ -33,11 +41,11 @@
     "mocha": "^2.3.4",
     "npm": "^2.13.5",
     "power-assert": "^1.2.0",
-    "ts-loader": "^0.5.5",
+    "ts-loader": "^0.7.2",
     "tsd": "^0.6.5",
     "tslint": "^2.5.1",
-    "typescript": "1.6.2",
+    "typescript": "^1.8.10",
     "webdav-sync": "^0.4.4",
-    "webpack": "^1.12.2"
+    "webpack": "^1.13.1"
   }
 }

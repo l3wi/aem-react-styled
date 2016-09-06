@@ -1,11 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "target": "es5",
+    "target": "es3",
     "sourceMap": true,
     "module": "commonjs",
     "jsx": "react",
-    "noEmit": true,
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": false
@@ -14,6 +13,14 @@
     "./references.d.ts",
     "./client.tsx",
     "./server.tsx",
-    "./test/test.ts"
+    "cityfinder/CityFinder.tsx",
+    "cityfinder/CityListView.tsx",
+    "cityfinder/CityView.tsx",
+    "./vanilla/TextField.tsx",
+    "./text/text.tsx",
+    "./embedded/embedded.tsx",
+    "./accordion/accordion-element.tsx",
+    "./accordion/accordion.tsx",
+    "./componentRegistry.tsx"
   ]
 }

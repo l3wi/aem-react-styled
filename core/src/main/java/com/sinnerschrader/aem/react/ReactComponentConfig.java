@@ -17,8 +17,6 @@ public class ReactComponentConfig {
 
   private boolean reload;
 
-  private String component;
-
   /**
    * The components props is the jcr node.
    *
@@ -29,12 +27,11 @@ public class ReactComponentConfig {
     return depth;
   }
 
-  /**
-   *
-   * @return name of the react component
-   */
-  public String getComponent() {
-    return component;
+  @JsonProperty
+  private String loaderClass;
+
+  public String getLoaderClass() {
+    return loaderClass;
   }
 
   /**

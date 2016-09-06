@@ -1,3 +1,6 @@
+.active {
+	font-weight: bolder;
+}
 .toggle-input-toggle {
   display: block;
   height: 60px;

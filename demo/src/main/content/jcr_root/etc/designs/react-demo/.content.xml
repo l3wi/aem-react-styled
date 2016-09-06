@@ -10,7 +10,7 @@
         <accordion
             jcr:primaryType="nt:unstructured"
             sling:resourceType="react-demo/components/accordion"
-            components="/apps/react-demo/components/accordion-element">
+            components="react-demo/components/accordion-element">
             <section jcr:primaryType="nt:unstructured"/>
          </accordion>
 

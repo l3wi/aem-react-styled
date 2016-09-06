@@ -1,15 +1,13 @@
 import * as React from "react";
 import * as resource from "aem-react-js/component/ResourceComponent";
 import AccordionElement from "./accordion-element";
-import * as Container from "aem-react-js/container";
 import {ResourceInclude} from "aem-react-js/include";
-import {ResourceUtils} from "aem-react-js/ResourceUtils";
+import ResourceUtils from "aem-react-js/ResourceUtils";
 import EditMarker from "aem-react-js/component/EditMarker";
 
-export default class Accordion extends Container.StackContainer {
+export default class Accordion extends resource.ResourceComponent<any, resource.ResourceProps, any> {
 
-
-    constructor(props: resource.ResourceProps<resource.Resource>) {
+    constructor(props: resource.ResourceProps) {
         super(props);
         this.state = {activeIndex: 0};
     }
@@ -23,10 +21,7 @@ export default class Accordion extends Container.StackContainer {
     }
 
     public renderBody(): React.ReactElement<any> {
-        let content: any = {};
-        if (this.props.resource) {
-            content = this.props.resource;
-        }
+        let content: any = this.getResource();
 
         let activeIndex = this.state.activeIndex;
 
@@ -35,28 +30,31 @@ export default class Accordion extends Container.StackContainer {
         let children: any = ResourceUtils.getChildren(content);
         Object.keys(children).forEach((node: string, childIdx: number) => {
             toggles.push(<AccordionElement path={node}
-                                 groupId={this.props.path}
-                                 onChange={function():void {this.onChange(childIdx);}.bind(this)}
-                                 key={node}
-                                 active={ activeIndex === childIdx }
+                                           groupId={this.props.path}
+                                           onChange={function():void {this.onChange(childIdx);}.bind(this)}
+                                           key={node}
+                                           active={ this.isWcmEnabled() || activeIndex === childIdx }
             ></AccordionElement>);
         }, this);
 
 
         let newZone: React.ReactElement<any> = null;
-        if (this.isWcmEditable()) {
+        if (this.isWcmEnabled()) {
             let resourceType = this.getResourceType() + "/new";
-            newZone = <ResourceInclude element="div" hidden={true} path={ this.props.path + "/*" }
-                                      resourceType={resourceType}></ResourceInclude>;
+            newZone = <ResourceInclude element="div" path="*"
+                                       resourceType={resourceType}></ResourceInclude>;
         }
         return (
             <div>
-                <EditMarker  label="Accordion"></EditMarker>
+                <EditMarker label="Accordion"/>
                 { toggles }
                 { newZone }
             </div>
         );
     }
 
+    protected getDepth(): number {
+        return 3;
+    }
 
 }
