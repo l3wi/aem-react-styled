@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        cq:lastModified="{Date}2016-09-06T08:29:52.957+02:00"
+        cq:lastModifiedBy="admin"
+        cq:template="/apps/react-demo/templates/page"
+        jcr:primaryType="cq:PageContent"
+        jcr:title="Hamburg"
+        sling:resourceType="react-demo/pages/page">
+        <par
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="wcm/foundation/components/parsys">
+            <city_finder
+                jcr:created="{Date}2016-07-12T19:55:10.042+02:00"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2016-07-14T16:09:13.077+02:00"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="react-demo/components/city-finder"
+                depth="1"
+                name="XXXXX">
+                <content
+                    jcr:lastModified="{Date}2016-08-31T14:14:23.296+02:00"
+                    jcr:lastModifiedBy="admin"
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="react-demo/components/city-view"
+                    description="Hamburg is located at the river Elbe."
+                    name="Hamburg">
+                    <more
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="react-demo/components/react-parsys">
+                        <text
+                            jcr:created="{Date}2016-07-13T13:35:00.447+02:00"
+                            jcr:createdBy="admin"
+                            jcr:lastModified="{Date}2016-07-24T07:45:40.351+02:00"
+                            jcr:lastModifiedBy="admin"
+                            jcr:primaryType="nt:unstructured"
+                            sling:resourceType="foundation/components/text"
+                            text="&lt;p>&lt;u>Hamburg's&lt;/u> &lt;i>football&lt;/i> &lt;b>team&lt;/b> has been sucking for a long time.&lt;/p>&#xa;"
+                            textIsRich="true"/>
+                    </more>
+                    <image
+                        jcr:lastModified="{Date}2016-09-06T08:29:52.953+02:00"
+                        jcr:lastModifiedBy="admin"
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="wcm/foundation/components/image"
+                        imageRotate="0">
+                        <file/>
+                    </image>
+                </content>
+                <text
+                    jcr:lastModified="{Date}2016-07-13T13:35:27.919+02:00"
+                    jcr:lastModifiedBy="admin"
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="foundation/components/text"
+                    text="&lt;p>h&lt;b>hb&lt;/b>&lt;i>hbhh&lt;/i>bhb&lt;/p>&#xa;"
+                    textIsRich="true"/>
+            </city_finder>
+        </par>
+    </jcr:content>
+</jcr:root>

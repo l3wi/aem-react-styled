@@ -19,15 +19,8 @@
                 jcr:primaryType="nt:unstructured"
                 sling:resourceType="wcm/foundation/components/parsys"
                 components="[group:React Demo, group:General]">
-                <accordion jcr:primaryType="nt:unstructured">
-                    <parsys
-                        jcr:primaryType="nt:unstructured"
-                        sling:resourceType="foundation/components/parsys"
-                        components="[group:General,group:React Demo]">
-                        <section jcr:primaryType="nt:unstructured"/>
-                    </parsys>
-                </accordion>
-            </par>
-        </page>
+                <section jcr:primaryType="nt:unstructured"/>
+             </par>
+         </page>
     </jcr:content>
 </jcr:root>

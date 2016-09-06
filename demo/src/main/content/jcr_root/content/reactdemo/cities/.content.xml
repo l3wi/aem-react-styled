@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content
+        cq:lastModified="{Date}2016-08-01T07:25:45.432+02:00"
+        cq:lastModifiedBy="admin"
+        cq:template="/apps/react-demo/templates/page"
+        jcr:primaryType="cq:PageContent"
+        jcr:title="CityFinder"
+        sling:resourceType="react-demo/pages/page">
+        <par
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="wcm/foundation/components/parsys">
+            <city_finder
+                jcr:created="{Date}2016-07-12T19:52:47.658+02:00"
+                jcr:createdBy="admin"
+                jcr:lastModified="{Date}2016-07-23T10:25:05.642+02:00"
+                jcr:lastModifiedBy="admin"
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="react-demo/components/city-finder"
+                depth="0"
+                name="XXXXXXX">
+                <more
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="react-demo/components/react-parsys">
+                    <wrapped_text_field
+                        jcr:created="{Date}2016-08-01T07:24:55.145+02:00"
+                        jcr:createdBy="admin"
+                        jcr:lastModified="{Date}2016-08-01T07:25:45.431+02:00"
+                        jcr:lastModifiedBy="admin"
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="react-demo/components/wrapped-text-field"
+                        label="Feld"/>
+                </more>
+            </city_finder>
+        </par>
+    </jcr:content>
+    <hamburg/>
+    <bremen/>
+    <muenchen/>
+</jcr:root>
