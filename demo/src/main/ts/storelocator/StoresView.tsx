@@ -9,9 +9,13 @@ export default class StoresView extends AemComponent<any, any> {
 
     public render(): React.ReactElement<any> {
         let storeList: React.ReactElement<any>[] = this.renderStoreList();
+        let resourceMapping: ResourceMapping = this.getComponent("resourceMapping");
+        let index: string = resourceMapping.map(this.props.route.baseResourcePath);
+
+
         return (
             <div>
-                <h3>Storelocator</h3>
+                <h3><AemLink to={index}>Cities</AemLink></h3>
                 <div style={{display:"flex",flexDirection:"row"}}>
                     <ul style={{flexBasis: "20%"}}>
                         {storeList}
@@ -33,17 +37,10 @@ export default class StoresView extends AemComponent<any, any> {
         let service: ServiceProxy = this.getOsgiService("com.sinnerschrader.aem.react.demo.StoreLocatorService");
         let stores: any[] = service.invoke("findStores", this.props.route.baseResourcePath);
 
-        console.log("stores " + JSON.stringify(stores));
-        let index: string = resourceMapping.map(this.props.route.baseResourcePath);
-
-        storeList.push(<li key="home">
-            <AemLink to={index} >Home</AemLink>
-        </li>);
-
         stores.forEach(function (model: any, childIdx: number): void {
             let link: string = resourceMapping.map(this.props.route.baseResourcePath + "/" + model.id);
             storeList.push(<li key={model.id}>
-                <AemLink to={link} >{model.name}</AemLink>
+                <AemLink activeClassName="active" to={link} >{model.name}</AemLink>
             </li>);
         }, this);
         return storeList;

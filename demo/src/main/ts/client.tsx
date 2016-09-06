@@ -20,7 +20,7 @@ container.register("cache", cache);
 container.register("history", browserHistory);
 container.register("resourceMapping", new ResourceMappingImpl(".html"));
 let componentManager: ComponentManager = new ComponentManager(rootComponentRegistry, container);
- 
+
 componentManager.initReactComponents();
 
 interface MyWindow {

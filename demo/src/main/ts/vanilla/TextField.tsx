@@ -1,5 +1,4 @@
 import * as React from "react";
-import EditMarker from "aem-react-js/component/EditMarker";
 
 export interface    TextFieldProps {
     label: string;
@@ -10,10 +9,10 @@ export interface    TextFieldProps {
 export class TextField extends React.Component<TextFieldProps, any> {
 
     public render(): React.ReactElement<any> {
+        let label: string = this.props.label || "please select a label";
         return (
             <label>
-                <EditMarker label="TextField"/>
-                <span>{this.props.label}</span>
+                <span>{label}</span>
                 <input pattern={this.props.pattern} required={this.props.required}></input>
             </label>
         );

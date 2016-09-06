@@ -31,7 +31,7 @@ if (!serverJs) {
     entries.app = './client.tsx';
 } else {
     entries.server = './server.tsx';
-    entries.vendor = ["react", "react-dom"];
+    //entries.vendor = ["react", "react-dom"]; there is no chunk plugin for nashorn
 }
 
 var nodeModules = [path.join(__dirname, 'node_modules'), path.join(__dirname, 'node_modules', 'react', 'node_modules', 'fbjs')];
@@ -48,11 +48,6 @@ var plugins = [
             'NODE_ENV': env
         }
     })];
-
-if (serverJs) {
-    plugins.push(new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"vendor.js"))
-}
-
 
 var config = {
     entry: entries,

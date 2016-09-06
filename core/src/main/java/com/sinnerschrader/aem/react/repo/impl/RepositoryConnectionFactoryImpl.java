@@ -26,7 +26,12 @@ public class RepositoryConnectionFactoryImpl implements RepositoryConnectionFact
     Map<String, Object> authInfo = Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, (Object) subServiceName);
 
     try {
-      ResourceResolver administrativeResourceResolver = resResFactory.getAdministrativeResourceResolver(null);
+      ResourceResolver administrativeResourceResolver;
+      if (subServiceName != null) {
+        administrativeResourceResolver = resResFactory.getServiceResourceResolver(authInfo);
+      } else {
+        administrativeResourceResolver = resResFactory.getAdministrativeResourceResolver(null);
+      }
       return new RepositoryConnectionImpl(administrativeResourceResolver);
     } catch (LoginException e) {
       throw new TechnicalException("Unable to login to repository with subservice-name '" + subServiceName + "'.", e);

@@ -25,7 +25,7 @@ public class StoreLocatorServiceImpl implements StoreLocatorService {
 
   @Override
   public String findStores(String basePath) {
-    try (RepositoryConnection con = connectionFactory.getConnection("demo")) {
+    try (RepositoryConnection con = connectionFactory.getConnection(null)) {
       Resource resource = con.getResourceResolver().getResource(basePath);
       JSONArray result = new JSONArray();
       if (resource != null) {

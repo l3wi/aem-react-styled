@@ -83,6 +83,7 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
   private List<HashedScript> scripts;
   private String[] scriptResources;
   private JcrResourceChangeListener listener;
+  private String subServiceName;
 
   @Reference
   private RepositoryConnectionFactory repositoryConnectionFactory;
@@ -103,7 +104,7 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
     }
 
     for (String scriptResource : scriptResources) {
-      try (Reader reader = scriptLoader.loadJcrScript(scriptResource)) {
+      try (Reader reader = scriptLoader.loadJcrScript(scriptResource, subServiceName)) {
         newScripts.add(createHashedScript(scriptResource, reader));
       } catch (IOException e) {
         throw new TechnicalException("cannot load jcr script " + scriptResource, e);
@@ -168,7 +169,7 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
       public void changed(String script) {
         createScripts();
       }
-    });
+    }, subServiceName);
     this.listener.activate(scriptResources);
     this.createScripts();
   }

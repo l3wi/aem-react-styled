@@ -7,8 +7,9 @@ export interface PanelProps {
 export class Panel extends React.Component<PanelProps, any> {
 
     public render(): React.ReactElement<any> {
+        let label: string = this.props.label || "please select a label";
         return (
-            <div><span>LABEL{this.props.label}</span>{this.props.children}</div>
+            <div><span>{label}</span>{this.props.children}</div>
         );
     }
 }

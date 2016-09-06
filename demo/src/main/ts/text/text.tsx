@@ -10,9 +10,9 @@ export default class Text extends resource.ResourceComponent<ReactTextResource, 
 
     public renderBody(): React.ReactElement<any> {
         let text: string = this.getResource().propText;
-        if (this.isWcmEditable() && !text) {
+        if (this.isWcmEnabled() && !text) {
             text = "please enter a text";
-        }
+        }  
         return (
             <span>{text}</span>
         );

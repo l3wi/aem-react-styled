@@ -101,58 +101,48 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
       boolean dialog = Arrays.asList(request.getRequestPathInfo().getSelectors()).contains("dialog");
 
-      String rootPath = this.getRootReactComponent(resource).getPath();
-
       if (dialog) {
         // just rendering to get the wrapper element and author mode js
         context.getWriter().write("");
         return null;
-      } else if (!renderAsJson && isPartialRequest(resource, request) && !rootPath.equals(resource.getPath())) {
-        // This is a react child component. The page needs to be rerendered
-        // completely. In the future we might ask the parent to reload its
-        // content via ajax.
-        String script = "<script>AemGlobal.componentManager.reloadRootInCq('" + resource.getPath() + "')</script>";
-        context.getWriter().write(script);
-        return null;
-      } else {
-
-        String renderedHtml;
-        boolean serverRendering = !SERVER_RENDERING_DISABLED.equals(request.getParameter(SERVER_RENDERING_PARAM));
-        String cacheString = null;
-        if (serverRendering) {
-          RenderResult result = renderReactMarkup(resource.getPath(), resource.getResourceType(), getWcmMode(request), context);
-          // TODO postrender should be performed if ncessary only.
-          renderedHtml = postRender(result.html, context);
-          cacheString = result.cache;
-        } else if (renderAsJson) {
-          // development mode: return cache with just the current resource.
-          JSONObject cache = new JSONObject();
-          JSONObject resources = new JSONObject();
-          JSONObject resourceEntry = new JSONObject();
-          resourceEntry.put("depth", 0);
-          // depth is inaccurate
-          resourceEntry.put("data", JsonObjectCreator.create(resource, -1));
-          resources.put(resource.getPath(), resourceEntry);
-          cache.put("resources", resources);
-          cacheString = cache.toString();
-          renderedHtml = "";
-        } else {
-          // initial rendering in development mode
-          renderedHtml = "";
-        }
-
-        String output;
-        if (renderAsJson) {
-          output = cacheString;
-          response.setContentType("application/json");
-        } else {
-          output = wrapHtml(resource.getPath(), resource, renderedHtml, serverRendering, getWcmMode(request), cacheString);
-
-        }
-
-        context.getWriter().write(output);
-        return null;
       }
+
+      String renderedHtml;
+      boolean serverRendering = !SERVER_RENDERING_DISABLED.equals(request.getParameter(SERVER_RENDERING_PARAM));
+      String cacheString = null;
+      if (serverRendering) {
+        RenderResult result = renderReactMarkup(resource.getPath(), resource.getResourceType(), getWcmMode(request), context);
+        // TODO postrender should be performed if ncessary only.
+        renderedHtml = postRender(result.html, context);
+        cacheString = result.cache;
+      } else if (renderAsJson) {
+        // development mode: return cache with just the current resource.
+        JSONObject cache = new JSONObject();
+        JSONObject resources = new JSONObject();
+        JSONObject resourceEntry = new JSONObject();
+        resourceEntry.put("depth", -1);
+        // depth is inaccurate
+        resourceEntry.put("data", JsonObjectCreator.create(resource, -1));
+        resources.put(resource.getPath(), resourceEntry);
+        cache.put("resources", resources);
+        cacheString = cache.toString();
+        renderedHtml = "";
+      } else {
+        // initial rendering in development mode
+        renderedHtml = "";
+      }
+
+      String output;
+      if (renderAsJson) {
+        output = cacheString;
+        response.setContentType("application/json");
+      } else {
+        output = wrapHtml(resource.getPath(), resource, renderedHtml, serverRendering, getWcmMode(request), cacheString);
+
+      }
+
+      context.getWriter().write(output);
+      return null;
 
     } catch (Exception e) {
       throw new ScriptException(e);
@@ -205,7 +195,6 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
     String jsonProps = StringEscapeUtils.escapeHtml4(reactProps.toString());
     String allHtml = "<div data-react-server=\"" + String.valueOf(serverRendering) + "\" data-react=\"app\" data-react-id=\"" + path + "_component\">"
         + renderedHtml + "</div>" + "<textarea id=\"" + path + "_component\" style=\"display:none;\">" + jsonProps + "</textarea>";
-    allHtml += "<script>if (typeof AemGlobal!=='undefined') AemGlobal.componentManager.updateComponent(\"" + path + "_component\")</script>";
 
     return allHtml;
   }

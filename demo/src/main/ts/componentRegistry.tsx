@@ -20,6 +20,6 @@ registry.register(StoreView);
 registry.register(AccordionElement);
 
 registry.registerVanilla({component: TextField});
-registry.registerVanilla({component: Panel, parsysPath: "content"});
+registry.registerVanilla({component: Panel, parsysPath: "content", depth: 2});
 
 export default registry;

@@ -33,15 +33,15 @@ export default class Accordion extends resource.ResourceComponent<any, resource.
                                            groupId={this.props.path}
                                            onChange={function():void {this.onChange(childIdx);}.bind(this)}
                                            key={node}
-                                           active={ activeIndex === childIdx }
+                                           active={ this.isWcmEnabled() || activeIndex === childIdx }
             ></AccordionElement>);
         }, this);
 
 
         let newZone: React.ReactElement<any> = null;
-        if (this.isWcmEditable()) {
+        if (this.isWcmEnabled()) {
             let resourceType = this.getResourceType() + "/new";
-            newZone = <ResourceInclude element="div" hidden={true} path="*"
+            newZone = <ResourceInclude element="div" path="*"
                                        resourceType={resourceType}></ResourceInclude>;
         }
         return (

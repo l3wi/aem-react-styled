@@ -29,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.day.cq.wcm.api.components.ComponentContext;
-import com.day.cq.wcm.api.components.EditContext;
-import com.day.cq.wcm.api.components.IncludeOptions;
 import com.day.cq.wcm.commons.WCMUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,20 +53,31 @@ public class Sling {
       this.element = element;
     }
 
-    public String getScript() {
-      return script;
-    }
-
-    public void setScript(String script) {
-      this.script = script;
-    }
-
     public Map<String, String> getAttributes() {
       return attributes;
     }
 
     private String element;
-    private String script;
+    private String html;
+
+    public String getHtml() {
+      return html;
+    }
+
+    public void setHtml(String html) {
+      this.html = html;
+    }
+
+    private EditDialog child;
+
+    public EditDialog getChild() {
+      return child;
+    }
+
+    public void setChild(EditDialog child) {
+      this.child = child;
+    }
+
     private Map<String, String> attributes = new HashMap<>();
 
     public void addAttribute(String key, String value) {
@@ -114,17 +123,16 @@ public class Sling {
   public String renderDialogScript(String path, String resourceType) {
     String html = this._includeResource(path, resourceType, true);
     Document document = Jsoup.parse(html);
-    EditDialog editDialog = new EditDialog();
+    EditDialog editDialog = null;
     for (Node node : document.body().childNodes()) {
       if (node instanceof Element) {
-        editDialog.setElement(node.nodeName());
-        for (Attribute attribute : node.attributes().asList()) {
-          editDialog.addAttribute(attribute.getKey(), attribute.getValue());
-        }
+        editDialog = parseEditDialog(node);
 
         for (Node child : node.childNodes()) {
-          if (child instanceof Element && child.nodeName().equalsIgnoreCase("script")) {
-            editDialog.setScript(((Element) child).html());
+          if (child instanceof Element) {
+            EditDialog childDialog = parseEditDialog(child);
+            editDialog.setChild(childDialog);
+            childDialog.setHtml(((Element) child).html());
             break;
           }
 
@@ -132,7 +140,7 @@ public class Sling {
         break;
       }
     }
-    if (StringUtils.isEmpty(editDialog.getElement())) {
+    if (editDialog == null) {
       return "null";
     }
     try {
@@ -141,6 +149,15 @@ public class Sling {
       LOG.error("cannot convert editdialog to json", e);
       return "null";
     }
+  }
+
+  private EditDialog parseEditDialog(Node node) {
+    EditDialog editDialog = new EditDialog();
+    editDialog.setElement(node.nodeName());
+    for (Attribute attribute : node.attributes().asList()) {
+      editDialog.addAttribute(attribute.getKey(), attribute.getValue());
+    }
+    return editDialog;
   }
 
   public String includeResource(String path, String resourceType) {
@@ -159,7 +176,6 @@ public class Sling {
 
       String script = normalizePath(request, path);
       ComponentContext componentContext = WCMUtils.getComponentContext(request);
-      EditContext editContext = componentContext.getEditContext();
 
       Resource includeRes = request.getResourceResolver().resolve(script);
       if (includeRes instanceof NonExistingResource || includeRes.isResourceType(Resource.RESOURCE_TYPE_NON_EXISTING)) {
@@ -174,15 +190,6 @@ public class Sling {
         }
         if (dialog) {
           opts.setAddSelectors("dialog");
-        }
-        IncludeOptions options = IncludeOptions.getOptions(request, true);
-        if (editContext == null) {
-          // this is the editable.refresh() case where the root should not be
-          // decorated but all others.
-          // TODO better move this code up to the eval method
-          options.forceEditContext(true);
-          options.setDecorationTagName("");
-          opts.setReplaceSelectors("");
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);

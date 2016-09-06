@@ -25,10 +25,13 @@ public class JcrResourceChangeListener implements EventListener {
 
   private Listener listener;
 
-  public JcrResourceChangeListener(RepositoryConnectionFactory repositoryConnectionFactory, Listener listener) {
+  private String subServiceName;
+
+  public JcrResourceChangeListener(RepositoryConnectionFactory repositoryConnectionFactory, Listener listener, String subServiceName) {
     super();
     this.repositoryConnectionFactory = repositoryConnectionFactory;
     this.listener = listener;
+    this.subServiceName = subServiceName;
   }
 
   private RepositoryConnection repositoryConnection;
@@ -41,7 +44,7 @@ public class JcrResourceChangeListener implements EventListener {
   }
 
   public void activate(String[] paths) {
-    this.repositoryConnection = this.repositoryConnectionFactory.getConnection(null);
+    this.repositoryConnection = this.repositoryConnectionFactory.getConnection(subServiceName);
     try {
       this.observationManager = this.repositoryConnection.getSession().getWorkspace().getObservationManager();
 

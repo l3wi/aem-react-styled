@@ -31,9 +31,9 @@ public class JcrScriptLoaderImpl implements ScriptLoader {
   private RepositoryConnectionFactory connectionFactory;
 
   @Override
-  public Reader loadJcrScript(String nodePath) {
+  public Reader loadJcrScript(String nodePath, String subServiceName) {
 
-    try (RepositoryConnection con = connectionFactory.getConnection("scriptloader")) {
+    try (RepositoryConnection con = connectionFactory.getConnection(subServiceName)) {
       Node node;
       try {
         node = con.getSession().getNode(nodePath);
