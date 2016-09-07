@@ -10,9 +10,8 @@ The basic javascript functionality is located in a separate [project](//www.gith
 
 # STATUS
 
-- Version: 0.2
+- Version: 0.3
 - API is unstable
-- TouchUI support limited
 
 # Why React and AEM?
 
@@ -83,7 +82,7 @@ in the component's jcr node. This code only shows the render method of the React
 ```javascript
 ...
 
-    render() {
+    renderBody() {
         var text:string = this.getResource().propText;
         if (this.isWcmEditable() && !text) text = "please enter a text";
         return (
