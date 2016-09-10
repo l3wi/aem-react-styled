@@ -42,7 +42,9 @@ mvn clean install -PautoInstallPackage
 
 ```
 
-The Scriptengine is currently not correctly deployed.
+##Trouble shooting
+
+### Nashorn engine erro: "No such function renderReactComponent"
 Check configuration of ReactScriptEngine in webconsole:
 - go to /system/console/configMgr
 - search for "react" in the browser
