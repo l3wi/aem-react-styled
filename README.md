@@ -42,6 +42,16 @@ mvn clean install -PautoInstallPackage
 
 ```
 
+The Scriptengine is currently not correctly deployed.
+Check configuration of ReactScriptEngine in webconsole:
+- go to /system/console/configMgr
+- search for "react" in the browser
+- open the configuration of "ReactJs Script Engine Factory"
+- important: jcr path must be "/etc/designs/react-demo/js/react-demo/server.js/jcr:content"
+- if it is not then update it.
+
+
+
 # Get started with your own project
 
 Install AEM locally.
