@@ -23,7 +23,7 @@ This project brings these technologies together, so that you can build highly in
 - [Universal](http://www.2ality.com/2015/08/isomorphic-javascript.html) React rendering
 - High performance javascript execution with a pool of Java 8 [nashorn](https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/nashorn/) engines. 
 - Nesting React components in other AEM components and vice versa is supported.
-- WCM edit mode support in React components.
+- Converting vanilla react components into AEM components is supported
 
 # Deploy / install the demo
 
@@ -86,23 +86,63 @@ javascript sources. Check the configuration:
 
 ## Example
 
-Here is a  simple example of how to render a text stored in a property called "propText" 
-in the component's jcr node. This code only shows the render method of the React component:
 
+### Create React Component
+
+Here is a  simple example of how to render a text stored in a property called "propText" 
+in the component's jcr node. This code shows the component without the import statements:
 
 
 ```javascript
-...
 
-    renderBody() {
-        var text:string = this.getResource().propText;
-        if (this.isWcmEditable() && !text) text = "please enter a text";
+export default class Text extends ResourceComponent {
+
+    public renderBody(): any {
+        let text:string = this.getResource().propText;
+        if (this.isWcmEnabled() && !text) {text = "please enter a text"};
         return (
             <span>{text}</span>
         );
     }
-...
+    
+}
 ```
+
+[demo source code](//github.com/sinnerschrader/aem-react/blob/master/demo/src/main/ts/text/text.tsx)
+
+### Map React Component to resourceType
+
+The component needs to be mapped to a resourcetype by registering it with a componentRegistry:
+
+```javascript
+
+let registry: ComponentRegistry = new ComponentRegistry("react-demo/components");
+registry.register(TextField); // this maps the component Text to the resourceType "react-demo/components/text-field"
+
+
+```
+
+[demo source code](//github.com/sinnerschrader/aem-react/blob/master/demo/src/main/ts/componentRegistry.tsx)
+
+All your components should go into one or more component registries. These will then be added to the bootstrapping javascript for server and client:
+
+[server.tsx](//github.com/sinnerschrader/aem-react/blob/master/demo/src/main/ts/server.tsx) 
+[client.tsx](//github.com/sinnerschrader/aem-react/blob/master/demo/src/main/ts/client.tsx) 
+
+
+### Create the AEM Component
+
+The aem component is created in the normal way. The only thing special is the template. It is only a placeholder and should have the extension "jsx".
+
+[demo source code](//github.com/sinnerschrader/aem-react/tree/master/demo/src/main/content/jcr_root/apps/react-demo/components/text)
+
+### Deploy
+
+
+
+### live code changes
+
+
 
 
 # Background

@@ -4,9 +4,8 @@ var path = require('path');
 var fs = require('fs');
 var webpack = require('webpack');
 
-var jcrPath = path.join(__dirname, '..', 'content', 'jcr_root', 'etc', 'designs', 'react-demo', 'js', 'react-demo');
-
 var serverJs = false;
+var watch = false;
 for (var idx in process.argv) {
     var arg = process.argv[idx];
     if (arg === '--env=production') {
@@ -17,7 +16,14 @@ for (var idx in process.argv) {
     if (arg === '--server') {
         serverJs = true;
     }
+    if (arg === '--watch') {
+        watch = true;
+    }
 }
+
+console.log("watch = " + watch);
+var jcrPath = path.join(__dirname, '..', '..', '..', 'target', 'classes', 'etc', 'designs', 'react-demo', 'js', 'react-demo');
+
 
 var targetFileName = serverJs ? "server.js" : "app.js";
 
@@ -31,16 +37,12 @@ if (!serverJs) {
     entries.app = './client.tsx';
 } else {
     entries.server = './server.tsx';
-    //entries.vendor = ["react", "react-dom"]; there is no chunk plugin for nashorn
 }
-
-var nodeModules = [path.join(__dirname, 'node_modules'), path.join(__dirname, 'node_modules', 'react', 'node_modules', 'fbjs')];
-
 
 //  env==production : prevents spurious error in nashorn when checking: typeof instance.receiveComponent === 'function'
 var env = '"' + (serverJs ? "production" : process.env.NODE_ENV) + '"';
 
-console.log("env "+env)
+console.log("env " + env)
 
 var plugins = [
     new webpack.DefinePlugin({

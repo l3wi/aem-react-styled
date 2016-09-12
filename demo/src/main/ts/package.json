@@ -4,13 +4,16 @@
   "version": "0.3.0",
   "main": "index.js",
   "config": {
-    "aemhost": "local.website"
+    "crx": "http://admin:admin@localhost:4602/crx/repository/crx.default"
   },
   "scripts": {
     "tsd": "tsd",
     "postinstallXX": "tsd install",
     "start": "webpack --env=development && webpack --env=development --server",
-    "watch": "echo \"deploying continuously to $npm_package_config_aemhost\" & webpack --env=development --watch & webpack --env=development --server --watch & webdav-sync --local_base ../content/jcr_root/ --remote_base http://admin:admin@$npm_package_config_aemhost:4602/crx/repository/crx.default/",
+    "watch": "echo \"deploying continuously to $npm_package_config_crx\" & npm run webpack-watch & npm run syncJs & npm run syncApps",
+    "webpack-watch": "webpack --env=development --watch & webpack --env=development --server --watch",
+    "syncJs": "webdav-sync --local_base ../../../target/classes/etc/designs/ --remote_base $npm_package_config_crx/etc/designs/",
+    "syncApps": "webdav-sync --local_base ../content/jcr_root/apps/ --remote_base $npm_package_config_crx/apps/",
     "test": "mocha --compilers ts:espower-typescript/guess test/*.ts",
     "lint": "eslint . & tslint **/*.tsx",
     "prepublish": "npm test"

@@ -12,7 +12,6 @@ interface AccordionElementProps extends resource.ResourceProps {
 
 export default class AccordionElement extends resource.ResourceComponent<any, AccordionElementProps, any> {
 
-
     public renderBody(): React.ReactElement<any> {
         let onChange = function (): void {
             if (!this.isWcmEnabled()) {
