@@ -51,7 +51,7 @@
 														jsoup
 												</Embed-Dependency>
 												<Export-Package>com.sinnerschrader.aem.react.demo.*</Export-Package>
-												<Sling-Model-Packages />
+												<Sling-Model-Packages>com.sinnerschrader.aem.react.demo</Sling-Model-Packages>
 										</instructions>
 								</configuration>
 						</plugin>

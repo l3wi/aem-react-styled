@@ -31,9 +31,6 @@ public class JsProxy {
       Method method = methods.get(name);
       Object returnValue = method.invoke(target, args);
       StringWriter stringWriter = new StringWriter();
-      if (returnValue instanceof String) {
-        return (String) returnValue;
-      }
       new ObjectMapper().writeValue(stringWriter, returnValue);
       return stringWriter.toString();
     } catch (Exception e) {

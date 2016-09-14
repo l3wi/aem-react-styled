@@ -34,8 +34,8 @@ export default class CityListView extends AemComponent<any, any> {
         let resourceMapping: ResourceMapping = this.getComponent("resourceMapping");
 
 
-        let service: ServiceProxy = this.getOsgiService("com.sinnerschrader.aem.react.demo.StoreLocatorService");
-        let stores: any[] = service.invoke("findStores", this.props.route.baseResourcePath);
+        let service: ServiceProxy = this.getRequestModel("com.sinnerschrader.aem.react.demo.CityFinderModel");
+        let stores: any[] = service.invoke("findCities", this.props.route.baseResourcePath, "par/city_finder/content");
 
         stores.forEach(function (model: any, childIdx: number): void {
             let link: string = resourceMapping.map(this.props.route.baseResourcePath + "/" + model.id);

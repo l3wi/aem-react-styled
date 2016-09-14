@@ -33,7 +33,7 @@ export default class CityFinder extends ResourceComponent<any, any, any> {
             <div>
             <Router history={history}>
                 <Route path={indexPath} component={CityListView} baseResourcePath={resourcePath}>
-                    <IndexRoute component={Home}/>
+                    <IndexRoute component={Home} baseResourcePath={resourcePath}/>
                     <Route path={pattern} resourceComponent={resourceComponent} component={ResourceRoute}/>
                 </Route>
             </Router>

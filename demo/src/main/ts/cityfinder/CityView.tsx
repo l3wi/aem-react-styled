@@ -13,9 +13,10 @@ export default class CityView extends ResourceComponent<CityDetail, any, any> {
 
     public renderBody(): React.ReactElement<any> {
         let cityDetail: CityDetail = this.getResource();
+        let name: string = this.getRequestModel("com.sinnerschrader.aem.react.demo.CityViewModel").invoke("getName");
         return (
             <div>
-                <h1>{cityDetail.name}</h1>
+                <h1>{name}</h1>
                 <p>{cityDetail.description}</p>
                 <ResourceInclude path="image" resourceType="wcm/foundation/components/image"/>
                 <ReactParsys path="more"></ReactParsys>
