@@ -16,8 +16,7 @@ import com.sinnerschrader.aem.react.repo.RepositoryConnection;
 import com.sinnerschrader.aem.react.repo.RepositoryConnectionFactory;
 
 /**
- * TODO add a watch on the resource to reload the script when the libraries are
- * modified.
+ *
  *
  *
  * @author stemey

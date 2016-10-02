@@ -13,9 +13,21 @@ import com.sinnerschrader.aem.react.exception.TechnicalException;
 import com.sinnerschrader.aem.react.repo.RepositoryConnection;
 import com.sinnerschrader.aem.react.repo.RepositoryConnectionFactory;
 
+/**
+ *
+ * Listens to changes to a set of resources.
+ *
+ * @author stemey
+ *
+ */
 public class JcrResourceChangeListener implements EventListener {
 
   public interface Listener {
+    /**
+     * a resource was modified
+     *
+     * @param script
+     */
     void changed(String script);
   }
 
@@ -77,8 +89,7 @@ public class JcrResourceChangeListener implements EventListener {
     try {
       this.listener.changed(itr.nextEvent().getPath());
     } catch (RepositoryException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOG.error("erorr when observing resource", e);
     }
   }
 

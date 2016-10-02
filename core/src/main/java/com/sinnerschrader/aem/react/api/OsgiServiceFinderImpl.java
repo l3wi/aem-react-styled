@@ -1,4 +1,4 @@
-package com.sinnerschrader.aem.react.data;
+package com.sinnerschrader.aem.react.api;
 
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -18,7 +18,7 @@ public class OsgiServiceFinderImpl implements OsgiServiceFinder {
   }
 
   @Override
-  public Object get(String className) {
+  public JsProxy get(String className) {
     ServiceReference serviceReference = bundleContext.getServiceReference(className);
     if (serviceReference == null) {
       return null;

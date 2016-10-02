@@ -11,5 +11,10 @@ import java.util.Iterator;
  */
 
 public interface ScriptCollectionLoader {
+  /**
+   * get all scripts
+   * 
+   * @return
+   */
   public Iterator<HashedScript> iterator();
 }

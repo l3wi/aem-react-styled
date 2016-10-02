@@ -1,13 +1,20 @@
-package com.sinnerschrader.aem.react.data;
+package com.sinnerschrader.aem.react.api;
 
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.adapter.Adaptable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * This class adapts objects to a target class.
+ *
+ * @author stemey
+ *
+ */
 public class ModelFactory {
 
-  private Logger logger = LoggerFactory.getLogger(ModelFactory.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ModelFactory.class);
 
   private ClassLoader classLoader;
 
@@ -19,21 +26,35 @@ public class ModelFactory {
 
   private SlingHttpServletRequest request;
 
-  public Object createRequestModel(String className) {
+  /**
+   * adapts the current request to the given class
+   *
+   * @param className
+   *          fully qualified class name
+   * @return
+   */
+  public JsProxy createRequestModel(String className) {
     return createModel(className, request);
   }
 
-  public Object createResourceModel(String className) {
+  /**
+   * adapts the current resource to the given class
+   *
+   * @param className
+   *          fully qualified class name
+   * @return
+   */
+  public JsProxy createResourceModel(String className) {
     return createModel(className, request.getResource());
   }
 
-  public Object createModel(String className, Adaptable adapatable) {
+  private JsProxy createModel(String className, Adaptable adapatable) {
 
     Class<?> clazz;
     try {
       clazz = classLoader.loadClass(className);
     } catch (ClassNotFoundException e) {
-      logger.error("could not find model class " + className);
+      LOGGER.error("could not find model class " + className);
       return null;
     }
     Object object = adapatable.adaptTo(clazz);

@@ -33,7 +33,7 @@ import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.apache.sling.scripting.api.AbstractScriptEngineFactory;
 import org.osgi.service.component.ComponentContext;
 
-import com.sinnerschrader.aem.react.data.OsgiServiceFinder;
+import com.sinnerschrader.aem.react.api.OsgiServiceFinder;
 import com.sinnerschrader.aem.react.exception.TechnicalException;
 import com.sinnerschrader.aem.react.loader.HashedScript;
 import com.sinnerschrader.aem.react.loader.JcrResourceChangeListener;

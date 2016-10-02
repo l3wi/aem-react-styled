@@ -1,4 +1,4 @@
-package com.sinnerschrader.aem.react.data;
+package com.sinnerschrader.aem.react.api;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -28,22 +28,38 @@ import org.jsoup.nodes.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.day.cq.wcm.api.components.ComponentContext;
-import com.day.cq.wcm.commons.WCMUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sinnerschrader.aem.react.PrintWriterResponseWrapper;
+import com.sinnerschrader.aem.react.ReactScriptEngine;
 import com.sinnerschrader.aem.react.exception.TechnicalException;
 
+/**
+ * This class is exposed to the react components and provides the base
+ * functionality to get access to content and wrapper elements.
+ *
+ * @author stemey
+ *
+ */
 public class Sling {
 
   public static class EditDialog {
-    private static final Map<String, String> REACT_MAPPING = new HashMap() {
+    private static final Map<String, String> REACT_MAPPING = new HashMap<String, String>() {
+      private static final long serialVersionUID = 1L;
+
       {
         put("class", "className");
         put("for", "htmlFor");
       }
     };
+
+    private EditDialog child;
+
+    private Map<String, String> attributes = new HashMap<>();
+
+    private String element;
+
+    private String html;
 
     public String getElement() {
       return element;
@@ -57,9 +73,6 @@ public class Sling {
       return attributes;
     }
 
-    private String element;
-    private String html;
-
     public String getHtml() {
       return html;
     }
@@ -68,8 +81,6 @@ public class Sling {
       this.html = html;
     }
 
-    private EditDialog child;
-
     public EditDialog getChild() {
       return child;
     }
@@ -77,8 +88,6 @@ public class Sling {
     public void setChild(EditDialog child) {
       this.child = child;
     }
-
-    private Map<String, String> attributes = new HashMap<>();
 
     public void addAttribute(String key, String value) {
       String reactKey = REACT_MAPPING.get(key);
@@ -90,7 +99,10 @@ public class Sling {
     }
   }
 
+  private static final Logger LOG = LoggerFactory.getLogger(Sling.class);
+
   private ScriptContext context;
+
   private ObjectMapper mapper;
 
   public Sling(ScriptContext context) {
@@ -99,27 +111,43 @@ public class Sling {
     this.mapper = new ObjectMapper();
   }
 
-  private static final Logger LOG = LoggerFactory.getLogger(Sling.class);
-
-  public String getResource(String path, Integer depth) {
+  /**
+   * get a resource
+   *
+   * @param path
+   * @param depth
+   * @return json string
+   */
+  public String getResource(final String path, final Integer depth) {
     SlingHttpServletRequest request = (SlingHttpServletRequest) context.getBindings(ScriptContext.ENGINE_SCOPE).get(SlingBindings.REQUEST);
 
+    int actualDepth;
     try {
       if (depth == null || depth < 1) {
-        depth = -1;
+        actualDepth = -1;
+      } else {
+        actualDepth = depth.intValue();
       }
+
       Resource resource = request.getResourceResolver().getResource(path);
       if (resource == null) {
         return null;
-      } else {
-        return JsonObjectCreator.create(resource, depth).toString();
       }
+      return JsonObjectCreator.create(resource, actualDepth).toString();
+
     } catch (JSONException e) {
       throw new TechnicalException("could not get current resource", e);
     }
 
   }
 
+  /**
+   * get the aem wrapper element
+   *
+   * @param path
+   * @param resourceType
+   * @return json string
+   */
   public String renderDialogScript(String path, String resourceType) {
     String html = this._includeResource(path, resourceType, true);
     Document document = Jsoup.parse(html);
@@ -151,63 +179,23 @@ public class Sling {
     }
   }
 
-  private EditDialog parseEditDialog(Node node) {
-    EditDialog editDialog = new EditDialog();
-    editDialog.setElement(node.nodeName());
-    for (Attribute attribute : node.attributes().asList()) {
-      editDialog.addAttribute(attribute.getKey(), attribute.getValue());
-    }
-    return editDialog;
-  }
-
+  /**
+   * get the html of an included component
+   *
+   * @param path
+   * @param resourceType
+   * @return
+   */
   public String includeResource(String path, String resourceType) {
     return this._includeResource(path, resourceType, false);
   }
 
-  public String _includeResource(String path, String resourceType, boolean dialog) {
-    StringWriter out = new StringWriter();
-    Bindings bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
-    if (StringUtils.isEmpty(path)) {
-      LOG.error("Script path cannot be empty");
-    } else {
-      SlingHttpServletResponse customResponse = new PrintWriterResponseWrapper(new PrintWriter(out),
-          (SlingHttpServletResponse) bindings.get(SlingBindings.RESPONSE));
-      SlingHttpServletRequest request = (SlingHttpServletRequest) bindings.get(SlingBindings.REQUEST);
-
-      String script = normalizePath(request, path);
-      ComponentContext componentContext = WCMUtils.getComponentContext(request);
-
-      Resource includeRes = request.getResourceResolver().resolve(script);
-      if (includeRes instanceof NonExistingResource || includeRes.isResourceType(Resource.RESOURCE_TYPE_NON_EXISTING)) {
-        includeRes = new SyntheticResource(request.getResourceResolver(), script, resourceType);
-      } else if (!includeRes.getPath().equals(script)) {
-        includeRes = new SyntheticResource(request.getResourceResolver(), script, resourceType);
-      }
-      try {
-        RequestDispatcherOptions opts = new RequestDispatcherOptions(null);
-        if (StringUtils.isNotEmpty(resourceType)) {
-          opts.setForceResourceType(resourceType);
-        }
-        if (dialog) {
-          opts.setAddSelectors("dialog");
-        }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
-        dispatcher.include(request, customResponse);
-      } catch (Exception e) {
-        LOG.error("Failed to include resource {}", script, e);
-      }
-    }
-    return out.toString();
-  }
-
-  private String normalizePath(SlingHttpServletRequest request, String path) {
-    if (!path.startsWith("/")) {
-      path = request.getResource().getPath() + "/" + path;
-    }
-    return ResourceUtil.normalize(path);
-  }
-
+  /**
+   * get the current resource
+   *
+   * @param depth
+   * @return
+   */
   public String currentResource(int depth) {
     SlingHttpServletRequest request = (SlingHttpServletRequest) context.getBindings(ScriptContext.ENGINE_SCOPE).get(SlingBindings.REQUEST);
 
@@ -229,6 +217,59 @@ public class Sling {
     String pathInfo = request.getPathInfo();
     return pathInfo;
 
+  }
+
+  private EditDialog parseEditDialog(Node node) {
+    EditDialog editDialog = new EditDialog();
+    editDialog.setElement(node.nodeName());
+    for (Attribute attribute : node.attributes().asList()) {
+      editDialog.addAttribute(attribute.getKey(), attribute.getValue());
+    }
+    return editDialog;
+  }
+
+  private String normalizePath(SlingHttpServletRequest request, final String path) {
+    String actualPath = path;
+    if (!path.startsWith("/")) {
+      actualPath = request.getResource().getPath() + "/" + path;
+    }
+    return ResourceUtil.normalize(actualPath);
+  }
+
+  private String _includeResource(String path, String resourceType, boolean dialog) {
+    StringWriter out = new StringWriter();
+    Bindings bindings = context.getBindings(ScriptContext.ENGINE_SCOPE);
+    if (StringUtils.isEmpty(path)) {
+      LOG.error("Script path cannot be empty");
+    } else {
+      SlingHttpServletResponse customResponse = new PrintWriterResponseWrapper(new PrintWriter(out),
+          (SlingHttpServletResponse) bindings.get(SlingBindings.RESPONSE));
+      SlingHttpServletRequest request = (SlingHttpServletRequest) bindings.get(SlingBindings.REQUEST);
+
+      String script = normalizePath(request, path);
+
+      Resource includeRes = request.getResourceResolver().resolve(script);
+      if (includeRes instanceof NonExistingResource || includeRes.isResourceType(Resource.RESOURCE_TYPE_NON_EXISTING)) {
+        includeRes = new SyntheticResource(request.getResourceResolver(), script, resourceType);
+      } else if (!includeRes.getPath().equals(script)) {
+        includeRes = new SyntheticResource(request.getResourceResolver(), script, resourceType);
+      }
+      try {
+        RequestDispatcherOptions opts = new RequestDispatcherOptions(null);
+        if (StringUtils.isNotEmpty(resourceType)) {
+          opts.setForceResourceType(resourceType);
+        }
+        if (dialog) {
+          opts.setAddSelectors(ReactScriptEngine.WRAPPER_ELEMENT_ONLY_SELECTOR);
+        }
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
+        dispatcher.include(request, customResponse);
+      } catch (Exception e) {
+        LOG.error("Failed to include resource {}", script, e);
+      }
+    }
+    return out.toString();
   }
 
 }

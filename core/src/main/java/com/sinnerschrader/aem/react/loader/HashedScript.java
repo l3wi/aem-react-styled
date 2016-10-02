@@ -1,5 +1,11 @@
 package com.sinnerschrader.aem.react.loader;
 
+/**
+ * This class represents a javascript file.
+ *
+ * @author stemey
+ *
+ */
 public class HashedScript {
   private String checksum;
   private String script;
@@ -12,18 +18,26 @@ public class HashedScript {
     this.id = id;
   }
 
+  /**
+   *
+   * @return checksum of javascript
+   */
   public String getChecksum() {
     return checksum;
   }
 
-  public void setChecksum(String checksum) {
-    this.checksum = checksum;
-  }
-
+  /**
+   *
+   * @return javascript
+   */
   public String getScript() {
     return script;
   }
 
+  /**
+   *
+   * @return path to javascript
+   */
   public String getId() {
     return id;
   }

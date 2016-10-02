@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sinnerschrader.aem.react.ReactScriptEngine.RenderResult;
+import com.sinnerschrader.aem.react.api.Cqx;
 import com.sinnerschrader.aem.react.exception.TechnicalException;
 import com.sinnerschrader.aem.react.loader.HashedScript;
 import com.sinnerschrader.aem.react.loader.ScriptCollectionLoader;
@@ -95,6 +96,13 @@ public class JavascriptEngine {
     }
   }
 
+  /**
+   * initialize this instance. creates a javascript engine and loads the
+   * javascript files. Instances of this class are not thread-safe.
+   *
+   * @param loader
+   * @param sling
+   */
   public void initialize(ScriptCollectionLoader loader, Object sling) {
     ScriptEngineManager scriptEngineManager = new ScriptEngineManager(null);
     engine = scriptEngineManager.getEngineByName("nashorn");
@@ -109,13 +117,6 @@ public class JavascriptEngine {
 
   private void updateJavascriptLibrary() {
 
-    // try {
-    // // TODO remove babel hack
-    // engine.eval("if (typeof global!=='undefined') delete
-    // global._babelPolyfill");
-    // } catch (ScriptException e) {
-    // throw new TechnicalException("cannot eval library script", e);
-    // }
     Iterator<HashedScript> iterator = loader.iterator();
     boolean reload = false;
     while (iterator.hasNext()) {
@@ -134,13 +135,21 @@ public class JavascriptEngine {
 
   }
 
+  /**
+   * render the given react component
+   *
+   * @param path
+   * @param resourceType
+   * @param wcmmode
+   * @param cqx
+   *          API object for current request
+   * @return
+   */
   public RenderResult render(String path, String resourceType, String wcmmode, Cqx cqx) {
 
     Invocable invocable = ((Invocable) engine);
     try {
       engine.getBindings(ScriptContext.ENGINE_SCOPE).put("Cqx", cqx);
-      // Object JSON = engine.get("JSON");
-      // Object props = invocable.invokeMethod(JSON, "parse", json);
       Object AemGlobal = engine.get("AemGlobal");
       Object value = invocable.invokeMethod(AemGlobal, "renderReactComponent", path, resourceType, wcmmode);
 
@@ -153,6 +162,13 @@ public class JavascriptEngine {
     }
   }
 
+  /**
+   * check if the template associated with this resourceType is a react
+   * component
+   *
+   * @param resourceType
+   * @return true if it is a react component
+   */
   public boolean isReactComponent(String resourceType) {
     Invocable invocable = ((Invocable) engine);
     try {

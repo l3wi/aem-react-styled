@@ -8,9 +8,9 @@ import com.sinnerschrader.aem.react.loader.ScriptCollectionLoader;
 
 /**
  *
- * javascript in the browser and in node are executed in a single threaded.
- * There are no locking mechanisms in the javascript language. Hence, we are
- * using a pool to get a javascript engine for the current thread,
+ * javascript in the browser and in node are executed in a single thread. There
+ * are no locking mechanisms in the javascript language. Hence, we are using a
+ * pool to get a javascript engine for the current thread.
  *
  * @author stemey
  *

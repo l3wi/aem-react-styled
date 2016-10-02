@@ -10,5 +10,13 @@ import java.io.Reader;
  */
 public interface ScriptLoader {
 
+  /**
+   * load a single script from repository
+   *
+   * @param nodePath
+   * @param subServiceName
+   *          the subservice to open the jcr session with
+   * @return
+   */
   public Reader loadJcrScript(String nodePath, String subServiceName);
 }
