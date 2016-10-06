@@ -13,4 +13,4 @@ script: ./docs/deploy.sh
 
 env:
   global:
-  - ENCRYPTION_LABEL: "9b4d91fcc66a"
+  - ENCRYPTION_LABEL: "7345bb60ed89"
