@@ -1,0 +1,31 @@
+{
+  "name": "count-docu",
+  "version": "0.0.1",
+  "scripts": {
+    "init": "mkdir -p dist && npm install",
+    "dist": "pwd && ls -ll && npm run clean && npm run init && npm run render && npm run copy && ls -ll dist/",
+    "render": "node script/start.js",
+    "clean": "rm -rf dist/*",
+    "copy": "cp -f src/**/*.png dist/ | : && cp -f src/**/*.svg dist/| : && cp -f src/**/*.jpg dist/| : && cp styles/main.css dist/main.css| : && npm run copy-bootstrap && npm run copy-jquery && npm run copy-highlight",
+    "copy-bootstrap": "cp -r node_modules/bootstrap dist/bootstrap",
+    "copy-jquery": "cp -r node_modules/jquery dist/jquery",
+    "copy-highlight": "cp -r node_modules/highlight.js dist/highlight.js",
+    "pdf": "node script/pdf.js"
+  },
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "colors": "^1.1.2",
+    "file": "^0.2.2",
+    "file-exists": "^2.0.0",
+    "handlebars": "^4.0.5",
+    "highlight.js": "^8.9.1",
+    "html-pdf": "^2.0.1",
+    "jquery": "^2.1.4",
+    "marked": "^0.3.5",
+    "path": "^0.12.7",
+    "sanitize-filename": "^1.6.0",
+    "sync-request": "^3.0.1",
+    "xml-parser": "^1.2.1"
+  }
+}

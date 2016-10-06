@@ -1,0 +1,14 @@
+@startuml
+
+class Hello {
+ message: string
+ sayIt(): string
+}
+
+class World {
+}
+
+World -up-|> Hello
+
+
+@enduml
