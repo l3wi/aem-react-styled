@@ -20,7 +20,7 @@ mode _production_ the javscript will
 
 To set the name/ip of your local server to local.website:
 
-npm config set demo:aemhost localhost
+npm config set demo:crx http://admin:admin@localhost:4502/crx/repository/crx.default
 
 
 ### watch
