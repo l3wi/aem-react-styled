@@ -1,0 +1,60 @@
+@startuml
+
+class AemComponent {
+     getPath(): string;
+
+     isWcmEnabled(): boolean;
+
+     getAemContext(): AemContext;
+
+     getRegistry(): RootComponentRegistry;
+
+     getOsgiService(name: string): any;
+
+     getResourceModel(name: string): any;
+
+     getRequestModel(name: string): any;
+
+}
+
+interface Resource {
+    "sling:resourceType": string;
+}
+ enum STATE {
+    LOADING, LOADED, FAILED
+}
+
+ interface ResourceState {
+    absolutePath: string;
+    resource?: any;
+    state: STATE;
+}
+
+ interface ResourceProps {
+    path: string;
+    root?: boolean;
+    wcmmode?: string;
+}
+
+
+abstract class ResourceComponent<R extends Resource, P extends ResourceProps, S extends ResourceState> extends AemComponent {
+
+
+
+    renderLoading(): React.ReactElement<any> ;
+    render(): React.ReactElement<any> ;
+    abstract renderBody(): React.ReactElement<any>;
+    getResourceType(): string ;
+    changedResource(path: string, resource: C): void;
+
+    protected getDepth(): number;
+
+}
+
+ResourceComponent --> ResourceState : state
+ResourceComponent --> ResourceProps : props
+ResourceComponent --> Resource : getResource()
+ResourceState --> STATE : state
+
+
+@enduml

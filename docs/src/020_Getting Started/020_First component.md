@@ -1,21 +1,22 @@
 This part assumes that the project was created according to the previous chapter.
 
 
+# 1. Start watch task
+Start the watch task which transpiles, bundles and uploads the javascript files to AEM.
 
-0. Start watch task
+Open console to folder /src/main/ts and run the watch task  `npm run watch`.
 
- - Open console to folder /src/main/ts
- - run the watch task which will automatically deploy all Typescript changes to AEM `npm run watch`
-
- If your aem instance is not running on localhost:4502 then you need to make these configurations:
+If your aem instance is not running on localhost:4502 then you need to make these configurations:
 
 ````bash
 npm config set demo:crx http://admin:admin@localhost:4502/crx/repository/crx.default
 ````
 
-1. create file
+Alternatively the config in the package.json can be modified.
 
- Create a file MyComponent.tsx under /ui.apps/src/main/ts/
+# 2. create file
+
+Create a file MyComponent.tsx under /ui.apps/src/main/ts/.
 
 
 ````typescript
@@ -42,9 +43,10 @@ export default class MyComponent extends ResourceComponent<any, any, any> {
 
 
 
-3. Register component
+# 3. Register component
 
- Got to componentRegistry.tsx and add a line
+The component needs to be associated with a resourceType `${appsFolderName}`/components/my-component.
+Open /ui.apps/src/main/ts/componentRegistry.tsx and add two lines
 
  ````typescript
  // add this line at the top
@@ -54,11 +56,11 @@ export default class MyComponent extends ResourceComponent<any, any, any> {
  componentRegistry.register(MyComponent);
  ````
 
-3. Create component configuration
+# 4. Create component configuration
 
- Create the component configuration in the appropriate folder `/apps/${appsFolderName}/components/my-component`.
- The template is an empty file called `my-component.jsx`. The edit dialog should
- provide a textfield for the property `label`.
+Create the component configuration in the appropriate folder `/apps/${appsFolderName}/components/my-component`.
+The template is an empty file called `my-component.jsx`. The edit dialog should
+provide a textfield for the property `./label`.
 
 
  - /apps/${appsFolderName}/components/my-component
@@ -67,14 +69,14 @@ export default class MyComponent extends ResourceComponent<any, any, any> {
    - dialog.xml
 
 
-4. Synchronize source code to crx
+# 5. Synchronize source code to crx
 
- The component configuration must be uploaded to crx. This can be done
- via maven install -PautoInstallPackage or other means.
+The component configuration must be uploaded to crx. This can be done
+via maven install -PautoInstallPackage. The watch task has already uploaded the javascript file.
 
- The watch task has already uploaded the javascript file.
-
-4. Open browser
+# 6. Open browser
 
  find the new react component in the sidekick.
+
+# 7. Continuely improve component
 

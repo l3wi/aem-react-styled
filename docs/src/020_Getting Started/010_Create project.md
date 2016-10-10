@@ -1,6 +1,6 @@
 To quickly get started we will use the maven archetype.
 
-1. create maven project
+# 1. create maven project
 
  ````bash
  mvn archetype:generate \
@@ -30,12 +30,12 @@ __Available properties__
 
 
 
-2. start AEM
+# 2. start AEM
 
  AEM should now be running.
 
 
-3. install demo
+# 3. install demo
 
  ````bash
  mvn install -PautoInstallPackage
@@ -50,7 +50,7 @@ parameter | default
 
 
 
-4. Open browser
+# 4. Open browser
 
 - go to the page /content/${siteName}/en.html
 - find react components in sidekick: _React Panel_, _React Text_ and _ReactParsys_
@@ -58,7 +58,7 @@ parameter | default
 
 ![The page en.html with sidekick](page_sidekick.png)
 
-5. disable author mode
+# 5. disable author mode
 
  Disabled the author mode by appending `?wcmmode=disabled` to the url.
  Install your [react dev tool](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) in chrome browser. Disable author mode and look at react component tree.

@@ -1,0 +1,16 @@
+@startuml
+
+
+React -> ResourceComponent: componentWillMount()
+activate ResourceComponent
+ResourceComponent -> Sling: subscribe(this.getPath(), this, {deph: this.getDepth()})
+Sling --> ResourceComponent : json
+ResourceComponent -> ResourceComponent: setState({state: STATE.LOADED})
+activate ResourceComponent
+ResourceComponent -> ResourceComponent: renderBody()
+
+deactivate ResourceComponent
+ResourceComponent --> React
+deactivate ResourceComponent
+
+@enduml
