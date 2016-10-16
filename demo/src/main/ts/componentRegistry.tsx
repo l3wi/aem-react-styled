@@ -20,6 +20,6 @@ registry.register(CityView);
 registry.register(AccordionElement);
 
 registry.registerVanilla({component: TextField});
-registry.registerVanilla({component: Panel, parsysPath: "content", depth: 2});
+registry.registerVanilla({component: Panel, parsys: {path: "content"}, depth: 2});
 
 export default registry;

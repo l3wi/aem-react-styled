@@ -163,7 +163,7 @@
 														<groupId>com.sinnerschrader.aem.react</groupId>
 														<artifactId>core</artifactId>
 														<target>/apps/react-demo/install</target>
-												</embedded>
+												</embedded> 
                          <embedded>
                             <groupId>com.sinnerschrader.aem.react</groupId>
                             <artifactId>democore</artifactId>
