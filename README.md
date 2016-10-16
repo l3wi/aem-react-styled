@@ -5,6 +5,8 @@ This project makes it possible to render Adobe Experience Manager ("AEM") compon
 
 # STATUS
 
+[![Build Status](https://travis-ci.org/sinnerschrader/aem-react.svg?branch=master)](https://travis-ci.org/sinnerschrader/aem-react)
+
 - Version: 0.3
 - API is unstable
 
