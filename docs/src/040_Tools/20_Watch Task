@@ -1,0 +1,27 @@
+The watch task will watch files in the target folder of the ui.apps project and deploys
+them in to AEM
+
+all files in `ui.apps/target/classes/etc/designs/${appsFolderName}` and `ui
+.apps/target/classes/apps/${appsFolderName}`. If a file is
+changed then the folder is deployed to the running AEM instance via webdav.
+
+All typescript files will also be watched and automatically transpiled and bundled into
+two javascript files: `reactClient.js`  and `reactServer.js`.
+
+
+This task will not detect changes in the src folder and hence you need to
+copy files that you want automatically deployed into the target folder. This can be achieved
+in eclipse by configuration of the build path for example.
+
+
+Start the watch task which transpiles, bundles and uploads the javascript files to AEM.
+
+Open console to folder /src/main/ts and run the watch task  `npm run watch`.
+
+If your AEM instance is not running on localhost:4502 then you need to make these configurations:
+
+````bash
+npm config set demo:crx http://admin:admin@localhost:4502/crx/repository/crx.default
+````
+
+

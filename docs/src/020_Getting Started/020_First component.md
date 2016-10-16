@@ -6,7 +6,7 @@ Start the watch task which transpiles, bundles and uploads the javascript files 
 
 Open console to folder /src/main/ts and run the watch task  `npm run watch`.
 
-If your aem instance is not running on localhost:4502 then you need to make these configurations:
+If your AEM instance is not running on localhost:4502 then you need to make these configurations:
 
 ````bash
 npm config set demo:crx http://admin:admin@localhost:4502/crx/repository/crx.default

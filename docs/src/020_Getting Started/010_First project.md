@@ -6,10 +6,13 @@ To quickly get started we will use the maven archetype.
  mvn archetype:generate \
   -DarchetypeGroupId=com.sinnerschrader.aem.react \
   -DarchetypeArtifactId=aem-project-archetype \
-  -DarchetypeVersion=10 \
+  -DarchetypeVersion=10.1 \
  ````
 
  You will then be asked a couple of questions about project name and folder names and so on.
+ These are the same as in the original archetype. Please find detailed
+ explanations [here](https://docs.adobe.com/docs/en/aem/6-0/develop/dev-tools/ht-projects-maven.html) in the section "Getting started in
+ 5 minutes".
 
 __Available properties__
 
@@ -52,6 +55,8 @@ parameter | default
 
 # 4. Open browser
 
+To check what was deployed we will use the Classic UI.
+
 - go to the page /content/${siteName}/en.html
 - find react components in sidekick: _React Panel_, _React Text_ and _ReactParsys_
 - find components already on the page
@@ -60,8 +65,13 @@ parameter | default
 
 # 5. disable author mode
 
- Disabled the author mode by appending `?wcmmode=disabled` to the url.
- Install your [react dev tool](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) in chrome browser. Disable author mode and look at react component tree.
+To check that we have actual react components in the page we will use the Classic UI.
+
+
+- Disabled the author mode by appending `?wcmmode=disabled` to the url.
+- Install your [react dev tool](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) in
+chrome browser.
+- Have a look at react component tree.
 
 ![The page en.html with react dev tools](page_dev_tool.png)
 

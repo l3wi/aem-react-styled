@@ -15,7 +15,21 @@ var imageTemplate = handlebars.compile(fs.readFileSync("script/image.hbs", "UTF-
         return "<h" + (level + markedRenderer.baseLevel) + ">" + text + "</h" + (level + markedRenderer.baseLevel) + ">";
     }
 
-    markedRenderer.table = function (header, body) {
+    markedRenderer.blockquote = function (text) {
+        var result = /.*(\[\[(warning|info|danger)\]\])/.exec(text)
+        var level="info";
+        var type="callout";
+        if (result!=null && result.length) {
+            if (result.length>=3 && typeof result[2]!=="undefined") {
+                level=result[2];
+            }
+            text=text.substring(0,result[0].length-result[1].length)+text.substring(result[0].length);
+        }
+        //return level+"-"+type+"   "+text;
+        return "<div class=\"bs-"+type+" bs-"+type+"-"+level+"\">" + text + "</div>";
+    }
+
+markedRenderer.table = function (header, body) {
         // TODO this is the bootstrap table
         return '<table class="table table-bordered table-striped">\n'
             + '<thead>\n'

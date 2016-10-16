@@ -26,19 +26,3 @@ export default class MyComponent extends ResourceComponent<any, any, any> {
 
  ````
 
-## Registering React class as AEM component
-
-
-## Loading Resource
-
-
-
-
-## Lazy Loading
-
-
-## Author mode
-
-
-## Java Api
-
