@@ -10,7 +10,7 @@ This project makes it possible to render Adobe Experience Manager ("AEM") compon
 
 # Documentation
 
-An comprehensive **[documentation](https://sinnerschrader.github.io/aem-react/)** is being developed. The documentation supercedes
+An comprehensive **[documentation](https://sinnerschrader.github.io/aem-react/)** is being developed. 
 
 
 # Deploy / install the demo
