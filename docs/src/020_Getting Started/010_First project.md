@@ -6,7 +6,7 @@ To quickly get started we will use the maven archetype.
  mvn archetype:generate \
   -DarchetypeGroupId=com.sinnerschrader.aem.react \
   -DarchetypeArtifactId=aem-project-archetype \
-  -DarchetypeVersion=10.1 \
+  -DarchetypeVersion=10.2 \
  ````
 
  You will then be asked a couple of questions about project name and folder names and so on.
