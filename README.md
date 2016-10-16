@@ -13,6 +13,10 @@ The basic javascript functionality is located in a separate [project](//www.gith
 - Version: 0.3
 - API is unstable
 
+# Documentation
+
+An comprehensive **[documentation](https://sinnerschrader.github.io/aem-react/)** is being developed.
+
 # Why React and AEM?
 
 React components are ideal to create web applications with complex client-side interactivity. AEM provides a perfect authoring interface for web content.
