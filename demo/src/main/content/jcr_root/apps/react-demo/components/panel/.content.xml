@@ -3,4 +3,4 @@
     jcr:primaryType="cq:Component"
     jcr:title="Panel"
     cq:isContainer="true"
-    componentGroup="React Demo"/>^
+    componentGroup="React Demo"/>

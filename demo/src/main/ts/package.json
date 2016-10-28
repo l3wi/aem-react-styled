@@ -8,15 +8,14 @@
   },
   "scripts": {
     "tsd": "tsd",
-    "postinstallXX": "tsd install",
+    "postinstall": "tsd install",
     "start": "webpack --env=development && webpack --env=development --server",
-    "watch": "echo \"deploying continuously to $npm_package_config_crx\" & npm run webpack-watch & npm run syncJs & npm run syncApps",
+    "watch": "echo \"deploying continuously to $npm_package_config_crx\" & npm run webpack-watch & npm run syncDesigns & npm run syncApps",
     "webpack-watch": "webpack --env=development --watch & webpack --env=development --server --watch",
-    "syncJs": "webdav-sync --local_base ../../../target/classes/etc/designs/ --remote_base $npm_package_config_crx/etc/designs/",
+    "syncDesigns": "webdav-sync --local_base ../../../target/classes/etc/designs/ --remote_base $npm_package_config_crx/etc/designs/",
     "syncApps": "webdav-sync --local_base ../content/jcr_root/apps/ --remote_base $npm_package_config_crx/apps/",
     "test": "mocha --compilers ts:espower-typescript/guess test/*.ts",
-    "lint": "eslint . & tslint **/*.tsx",
-    "prepublish": "npm test"
+    "lint": "eslint . & tslint **/*.tsx"
   },
   "repository": {
     "type": "git",
@@ -31,7 +30,7 @@
     "node-libs-browser": "^0.5.3",
     "process": "^0.11.1",
     "query-string": "^3.0.0",
-    "aem-react-js": "file:/Users/stemey/work/projects/aem-react-js/aem-react-js-0.3.3.tgz",
+    "aem-react-js": "^0.4.0",
     "react-router": "^2.7.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
