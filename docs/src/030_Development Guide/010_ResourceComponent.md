@@ -26,3 +26,26 @@ export default class MyComponent extends ResourceComponent<any, any, any> {
 
  ````
 
+# Container
+
+If the component is a container then it must to render its children by itself. One option is to call `renderChildren` which
+turns the component into a parsys like container for any child components. If the child components are restricted to a certain type
+  then a custom rendering might be a better solution.
+  
+  
+````typescript
+
+public renderBody(): React.ReactElement<any> {
+
+    let label: string = this.getResource().label;
+    let children: React.ReactElement<any>[] =this.renderChildren(this.getResource(), "children");
+    return (
+        <div>
+            <span>Hello {label}</span>
+            {children}
+        </div>
+    );
+}
+````
+
+
