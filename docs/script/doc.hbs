@@ -20,59 +20,65 @@
 
 </head>
 <body>
-    <div class="container"/>
-    <div class="row">
-        <div class="col-md-9" style="position:relative">
+    <div class="js_header bs-docs-header" id="content" tabindex="-1">
+        <div class="container">
             <h1>{{title}}</h1>
-            {{#chapters}}
-                <h2 id="nav_{{@index}}">{{inc @index}} {{title}}</h2>
-                {{{markdown content 2}}}
-                {{#sections}}
-                    {{{markdown . 2}}}
-                {{/sections}}
-                {{#chapters}}
-                    <h3 id="subnav_{{@../index}}_{{@index}}">{{inc @../index}}.{{inc @index}} {{title}}</h3>
-                    {{{markdown content 3}}}
-                    {{#sections}}
-                        {{{markdown . 3}}}
-                    {{/sections}}
-                    {{#chapters}}
-                      <h4 id="subsubnav_{{@../../index}}_{{@../index}}_{{@index}}">{{inc @../../index}}.{{inc @../index}}.{{inc @index}} {{title}}</h4>
-                        {{{markdown content 4}}}
-                    {{/chapters}}
-                {{/chapters}}
-            {{/chapters}}
-        </div>
-        <div class="col-md-3">
-            <nav id="navigation" class="bs-docs-sidebar affix">
-                <ul class="nav bs-docs-sidenav">
-                    {{#chapters}}
-                        <li>
-                            <a href="#nav_{{@index}}">{{inc @index}} {{title}}</a>
-                            {{#if chapters}}
-                            <ul class="nav">
-                                {{#chapters}}
-                                    <li>
-                                        <a href="#subnav_{{@../index}}_{{@index}}">{{inc @../index}}.{{inc @index}} {{title}}</a>
-                                        {{#if chapters}}
-                                        <ul class="nav">
-                                            {{#chapters}}
-                                                <li>
-                                                    <a href="#subsubnav_{{@../../index}}_{{@../index}}_{{@index}}">{{inc @../../index}}.{{inc @../index}}.{{inc @index}} {{title}}</a>
-                                                </li>
-                                            {{/chapters}}
-                                        </ul>
-                                        {{/if}}
-                                    </li>
-                                {{/chapters}}
-                            </ul>
-                            {{/if}}
-                        </li>
-                    {{/chapters}}
-                </ul>
-            </nav>
+            <p>AEM components written in React</p>
         </div>
     </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9" style="position:relative">
+                {{#chapters}}
+                    <h2 id="nav_{{@index}}">{{inc @index}} {{title}}</h2>
+                    {{{markdown content 2}}}
+                    {{#sections}}
+                        {{{markdown . 2}}}
+                    {{/sections}}
+                    {{#chapters}}
+                        <h3 id="subnav_{{@../index}}_{{@index}}">{{inc @../index}}.{{inc @index}} {{title}}</h3>
+                        {{{markdown content 3}}}
+                        {{#sections}}
+                            {{{markdown . 3}}}
+                        {{/sections}}
+                        {{#chapters}}
+                          <h4 id="subsubnav_{{@../../index}}_{{@../index}}_{{@index}}">{{inc @../../index}}.{{inc @../index}}.{{inc @index}} {{title}}</h4>
+                            {{{markdown content 4}}}
+                        {{/chapters}}
+                    {{/chapters}}
+                {{/chapters}}
+            </div>
+            <div class="col-md-3">
+                <nav id="navigation" class="bs-docs-sidebar">
+                    <ul class="nav bs-docs-sidenav">
+                        {{#chapters}}
+                            <li>
+                                <a href="#nav_{{@index}}">{{inc @index}} {{title}}</a>
+                                {{#if chapters}}
+                                <ul class="nav">
+                                    {{#chapters}}
+                                        <li>
+                                            <a href="#subnav_{{@../index}}_{{@index}}">{{inc @../index}}.{{inc @index}} {{title}}</a>
+                                            {{#if chapters}}
+                                            <ul class="nav">
+                                                {{#chapters}}
+                                                    <li>
+                                                        <a href="#subsubnav_{{@../../index}}_{{@../index}}_{{@index}}">{{inc @../../index}}.{{inc @../index}}.{{inc @index}} {{title}}</a>
+                                                    </li>
+                                                {{/chapters}}
+                                            </ul>
+                                            {{/if}}
+                                        </li>
+                                    {{/chapters}}
+                                </ul>
+                                {{/if}}
+                            </li>
+                        {{/chapters}}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        </div>
     <footer class="footer">
         <p>generated on {{date}}</p>
     </footer>
@@ -81,6 +87,23 @@
     <script src="jquery/dist/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bootstrap/dist/js/bootstrap.js"></script>
-    <script>$('body').scrollspy({target: '#navigation'})</script>
+    <script>
+        var headerHeight = document.querySelector(".js_header").getBoundingClientRect().height;
+        var nav = $("#navigation");
+        function checkScroll() {
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (headerHeight<scrollTop) {
+                nav.addClass("affix");
+            } else{
+                nav.removeClass("affix");
+            }
+        }
+        function runOnScroll() {
+            checkScroll();
+        }
+        window.addEventListener("scroll", runOnScroll);
+        $('body').scrollspy({target: '#navigation'})
+        checkScroll();
+    </script>
 </body>
 </html>
