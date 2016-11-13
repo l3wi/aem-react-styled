@@ -4,5 +4,5 @@ var config = JSON.parse(fs.readFileSync(process.cwd() + "/config.json", "UTF-8")
 
 var generate = require("./generate");
 
-generate( config.title || "title missing");
+generate( config);
 console.log("done");

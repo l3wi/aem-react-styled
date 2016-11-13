@@ -49,11 +49,13 @@ var readChapter = function (dirName, level) {
     return chapter;
 }
 
-function generate(title) {
+function generate(config) {
 
-    console.log(" workingDir "+workingDir);
+    console.log(" workingDir " + workingDir);
     var doc = readChapter(workingDir + "/src", 1);
-    doc.title = title;
+    Object.keys(config || {}).forEach(function (key) {
+        doc[key] = config[key];
+    })
     doc.date = new Date();
     var ls = fs.readdirSync(workingDir + "/src");
 
