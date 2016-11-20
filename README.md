@@ -6,6 +6,7 @@ This project makes it possible to render Adobe Experience Manager ("AEM") compon
 # STATUS
 
 [![Build Status](https://travis-ci.org/sinnerschrader/aem-react.svg?branch=master)](https://travis-ci.org/sinnerschrader/aem-react)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.sinnerschrader.aem.react/aem-react/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cz.jirutka.rsql/rsql-parser)
 
 - Version: 0.4
 - API is unstable
