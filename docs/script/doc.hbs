@@ -25,8 +25,8 @@
                 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-87337951-1', 'auto');
-        ga('send', 'pageview');
+        ga('create', 'UA-87337951-1', {'allowAnchor': true});
+        ga('send', 'pageview', { 'page': location.pathname + location.search + location.hash});
 
     </script>
 
@@ -116,6 +116,13 @@
         window.addEventListener("scroll", runOnScroll);
         $('body').scrollspy({target: '#navigation'})
         checkScroll();
+
+        $(document).ready(function () {
+            $('#navigation a').click(function(){
+                var match = $(this).attr('href').match(/#\S+/);
+                ga('send', 'pageview', location.pathname + match[0]);
+            });
+        });
     </script>
 </body>
 </html>
