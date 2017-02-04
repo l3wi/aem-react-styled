@@ -223,7 +223,7 @@ h4, h5, h6 {
 .bs-callout-info {
     border-left-color: #1b809e;
 }
-.bs-callout-info h4 {
+.bs-callout-info h4,.bs-callout-info h3,.bs-callout-info h5  {
     color: #1b809e;
 }
 
