@@ -6,8 +6,13 @@ To quickly get started we will use the maven archetype.
  mvn archetype:generate \
   -DarchetypeGroupId=com.sinnerschrader.aem.react \
   -DarchetypeArtifactId=aem-project-archetype \
-  -DarchetypeVersion=10.2 \
+  -DarchetypeVersion=10.x \
  ````
+ 
+ > [[info]] __Versions__
+ >
+ > Get the latest [archetypeVersion](https://github.com/sinnerschrader/aem-project-archetype/releases). After generation of the project make sure that you also have
+ > the latest versions of the [aem-react-js npm module](https://github.com/sinnerschrader/aem-react-js/releases) in `ui.apps/src/main/ts/package.json` and the latest [aem-react osgi bundle](https://github.com/sinnerschrader/aem-react/releases) in `core/pom.xml`.
 
  You will then be asked a couple of questions about project name and folder names and so on.
  These are the same as in the original archetype. Please find detailed
