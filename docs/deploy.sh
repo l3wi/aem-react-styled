@@ -10,6 +10,7 @@ cd docs
 
 function doCompile {
   npm run dist
+  npm run pdf
 }
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify

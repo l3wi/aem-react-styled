@@ -1,22 +1,23 @@
 {
-  "name": "count-docu",
+  "name": "aem-react-docu",
   "version": "0.0.1",
   "scripts": {
     "init": "mkdir -p dist && npm install",
     "dist": "pwd && ls -ll && npm run clean && npm run init && npm run render && npm run copy && ls -ll dist/",
-    "render": "node script/start.js",
+    "render": "node script/html.js",
     "clean": "rm -rf dist/*",
     "copy-images": "find ./src -type f \\( -iname \\*.jpg -o -iname \\*.png -o -iname \\*.svg -o -iname \\*.puml \\) -exec  cp {} dist/ \\; ",
-    "copy": "npm run copy-images && cp styles/main.css dist/main.css| : && npm run copy-bootstrap && npm run copy-jquery && npm run copy-highlight",
+    "copy": "npm run copy-images && cp node_modules/count-docu/styles/main.css dist/main.css| : && npm run copy-bootstrap && npm run copy-jquery && npm run copy-highlight",
     "copy-bootstrap": "cp -r node_modules/bootstrap dist/bootstrap",
     "copy-jquery": "cp -r node_modules/jquery dist/jquery",
     "copy-highlight": "cp -r node_modules/highlight.js dist/highlight.js",
-    "pdf": "node script/pdf.js"
+    "pdf": "node script/pdf.js && ../wkhtmltox/bin/wkhtmltopdf --page-size A4 --viewport-size 1024x768 --disable-smart-shrinking --zoom 4.5 --outline  dist/pdf.html dist/index.pdf"
   },
   "private": true,
   "dependencies": {
     "bootstrap": "^3.3.6",
     "colors": "^1.1.2",
+    "count-docu": "^0.1.3",
     "file": "^0.2.2",
     "file-exists": "^2.0.0",
     "handlebars": "^4.0.5",
