@@ -11,7 +11,7 @@
     "copy-bootstrap": "cp -r node_modules/bootstrap dist/bootstrap",
     "copy-jquery": "cp -r node_modules/jquery dist/jquery",
     "copy-highlight": "cp -r node_modules/highlight.js dist/highlight.js",
-    "pdf": "node script/pdf.js && ../wkhtmltox/bin/wkhtmltopdf --page-size A4 --viewport-size 1024x768 --disable-smart-shrinking --zoom 4.5 --outline  dist/pdf.html dist/index.pdf"
+    "pdf": "node script/pdf.js && ../wkhtmltox/bin/wkhtmltopdf --page-size A4 --viewport-size 1024x768 --disable-smart-shrinking --zoom 0.5 --outline  dist/pdf.html dist/index.pdf"
   },
   "private": true,
   "dependencies": {
