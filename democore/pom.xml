@@ -162,10 +162,7 @@
 						<groupId>org.apache.sling</groupId>
 						<artifactId>org.apache.sling.models.api</artifactId>
 				</dependency>
-				<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-lang3</artifactId>
-				</dependency>
+
 
 
 				<!-- Testing -->
@@ -190,44 +187,6 @@
 						<artifactId>commons-io</artifactId>
 						<version>2.4</version>
 				</dependency>
-				<dependency>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-pool2</artifactId>
-				</dependency>
-				<dependency>
-						<groupId>org.apache.sling</groupId>
-						<artifactId>org.apache.sling.i18n</artifactId>
-				</dependency>
-				<dependency>
-						<groupId>com.github.jknack</groupId>
-						<artifactId>handlebars</artifactId>
-						<version>4.0.1</version>
-				</dependency>
-				<dependency>
-						<groupId>org.mozilla</groupId>
-						<artifactId>rhino</artifactId>
-						<version>1.7R4</version>
-				</dependency>
-				<dependency>
-						<groupId>org.antlr</groupId>
-						<artifactId>antlr4-runtime</artifactId>
-						<version>4.5.1-1</version>
-						<exclusions>
-								<exclusion>
-										<groupId>org.abego.treelayout</groupId>
-										<artifactId>org.abego.treelayout.core</artifactId>
-								</exclusion>
-						</exclusions>
-				</dependency>
-				<dependency>
-				  <groupId>org.apache.sling</groupId>
-				  <artifactId>org.apache.sling.commons.json</artifactId>
-				  <version>2.0.10</version>
-				</dependency>
-				<dependency>
-						<groupId>org.jsoup</groupId>
-						<artifactId>jsoup</artifactId>
-						<version>1.8.3</version>
-				</dependency>
+
 		</dependencies>
 </project>
