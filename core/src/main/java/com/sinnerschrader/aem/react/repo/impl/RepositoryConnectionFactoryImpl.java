@@ -3,6 +3,7 @@ package com.sinnerschrader.aem.react.repo.impl;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.Service;
@@ -23,11 +24,11 @@ public class RepositoryConnectionFactoryImpl implements RepositoryConnectionFact
 
   @Override
   public RepositoryConnection getConnection(String subServiceName) {
-    Map<String, Object> authInfo = Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, (Object) subServiceName);
-
     try {
       ResourceResolver administrativeResourceResolver;
-      if (subServiceName != null) {
+      if (StringUtils.isNotEmpty(subServiceName)) {
+        Map<String, Object> authInfo = Collections.singletonMap(ResourceResolverFactory.SUBSERVICE, (Object) subServiceName);
+
         administrativeResourceResolver = resResFactory.getServiceResourceResolver(authInfo);
       } else {
         administrativeResourceResolver = resResFactory.getAdministrativeResourceResolver(null);

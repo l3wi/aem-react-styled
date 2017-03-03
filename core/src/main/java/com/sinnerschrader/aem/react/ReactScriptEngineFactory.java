@@ -45,15 +45,18 @@ import com.sinnerschrader.aem.react.repo.RepositoryConnectionFactory;
 @Service(ScriptEngineFactory.class)
 @Properties({ @Property(name = "service.description", value = "Reactjs Templating Engine"), //
     @Property(name = "compatible.javax.script.name", value = "jsx"), // TODO
-                                                                     // also use
-                                                                     // it for
+                                                                     // also
+                                                                     // use
+                                                                     // it
+                                                                     // for
                                                                      // extension
                                                                      // and
                                                                      // other
                                                                      // props.
     @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_PATHS, label = "the jcr paths to the scripts libraries", value = {}, cardinality = Integer.MAX_VALUE), //
+    @Property(name = ReactScriptEngineFactory.PROPERTY_SUBSERVICENAME, label = "the subservicename for accessing the script resources. If it is null then the deprecated system admin will be used.", value = ""), //
     @Property(name = ReactScriptEngineFactory.PROPERTY_POOL_TOTAL_SIZE, label = "total javascript engine pool size", longValue = 20), //
-    @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_RELOAD, label = "reload library scripts before each rendering", boolValue = true),//
+    @Property(name = ReactScriptEngineFactory.PROPERTY_SCRIPTS_RELOAD, label = "reload library scripts when they were modified", boolValue = true),//
 })
 public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
@@ -159,6 +162,7 @@ public class ReactScriptEngineFactory extends AbstractScriptEngineFactory {
 
   @Activate
   public void initialize(final ComponentContext context) {
+    this.subServiceName = PropertiesUtil.toString(context.getProperties().get(PROPERTY_SUBSERVICENAME), "");
     scriptResources = PropertiesUtil.toStringArray(context.getProperties().get(PROPERTY_SCRIPTS_PATHS), new String[0]);
     int poolTotalSize = PropertiesUtil.toInteger(context.getProperties().get(PROPERTY_POOL_TOTAL_SIZE), 20);
     JavacriptEnginePoolFactory javacriptEnginePoolFactory = new JavacriptEnginePoolFactory(createLoader(scriptResources), null);
