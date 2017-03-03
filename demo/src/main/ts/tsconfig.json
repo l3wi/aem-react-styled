@@ -18,6 +18,7 @@
     "cityfinder/CityView.tsx",
     "./vanilla/TextField.tsx",
     "./text/text.tsx",
+    "./text/richtext.tsx",
     "./embedded/embedded.tsx",
     "./accordion/accordion-element.tsx",
     "./accordion/accordion.tsx",

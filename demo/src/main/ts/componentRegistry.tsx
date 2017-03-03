@@ -8,9 +8,11 @@ import CityFinder from "./cityfinder/CityFinder";
 import CityView from "./cityfinder/CityView";
 import {Panel} from "./vanilla/Panel";
 import {TextField} from "./vanilla/TextField";
+import RichText from "./text/richtext";
 
 let registry: ComponentRegistry = new ComponentRegistry("react-demo/components");
 registry.register(Embedded);
+registry.register(RichText);
 registry.register(Text);
 registry.register(ReactParsys);
 registry.register(Accordion);
