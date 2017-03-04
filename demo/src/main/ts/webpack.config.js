@@ -40,7 +40,7 @@ if (!serverJs) {
 }
 
 //  env==production : prevents spurious error in nashorn when checking: typeof instance.receiveComponent === 'function'
-var env = '"' + (serverJs ? "production" : process.env.NODE_ENV) + '"';
+var env = '"' +process.env.NODE_ENV+'"' ;// '"' + (serverJs ? "production" : process.env.NODE_ENV) + '"';
 
 console.log("env " + env)
 

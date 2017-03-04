@@ -5,6 +5,7 @@
     "sourceMap": true,
     "module": "commonjs",
     "jsx": "react",
+    "noEmit":false,
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": false

@@ -24,7 +24,7 @@ export default class Home extends AemComponent<any, any> {
 
         let cities: React.ReactElement<any>[] = this.renderCityList();
         return (
-            <div>
+            <div className="city-view transition-item">
                 <h1>Find a nice town</h1>
                 {cities}
                 <ReactParsys path="more"></ReactParsys>

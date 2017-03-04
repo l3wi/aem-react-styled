@@ -7,8 +7,8 @@
     "crx": "http://admin:admin@localhost:4602/crx/repository/crx.default"
   },
   "scripts": {
-    "tsd": "tsd",
-    "postinstall": "tsd install",
+    "tsd": "typings",
+    "build": "typings install && ./node_modules/typescript/bin/tsc",
     "start": "webpack --env=development && webpack --env=development --server",
     "watch": "echo \"deploying continuously to $npm_package_config_crx\" & npm run webpack-watch & npm run syncDesigns & npm run syncApps",
     "webpack-watch": "webpack --env=development --watch & webpack --env=development --server --watch",
@@ -22,18 +22,19 @@
     "url": "https://github.com/sinnerschrader/aem-react.git"
   },
   "dependencies": {
+    "aem-react-js": "^0.4.2",
     "babel-polyfill": "^6.3.14",
     "classlist-polyfill": "^1.0.2",
     "deep-equal": "^1.0.1",
-    "history": "^1.17.0",
+    "history": "^3.3.0",
     "invariant": "^2.2.0",
     "node-libs-browser": "^0.5.3",
     "process": "^0.11.1",
     "query-string": "^3.0.0",
-    "aem-react-js": "^0.4.0",
-    "react-router": "^2.7.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
+    "react-router": "^3.0.2",
+    "react-router-page-transition": "^3.0.2",
     "strict-uri-encode": "^1.1.0",
     "warning": "^2.1.0"
   },
@@ -43,10 +44,10 @@
     "mocha": "^2.3.4",
     "npm": "^2.13.5",
     "power-assert": "^1.2.0",
-    "ts-loader": "^0.7.2",
-    "tsd": "^0.6.5",
-    "tslint": "^2.5.1",
-    "typescript": "^1.8.10",
+    "ts-loader": "^2.0.1",
+    "tslint": "^4.0.1",
+    "typescript": "^2.1.1",
+    "typings": "^2.1.0",
     "webdav-sync": "^0.4.4",
     "webpack": "^1.13.1"
   }

@@ -57,3 +57,19 @@ registry.registerVanilla({
     component: myComponent, transform: transform
 });
 ````
+
+# Include vanilla wrapper
+
+When including a vanilla component registered as an AEM component directly in a jsx  you need to use `<VanillaInclude/>`.
+ Otherwise it will not be editable on the page.
+ 
+ 
+````typescript
+  <div>
+     <VanillaInclude path="test" component={MyVanillaComponent}/>
+  </div>   
+````
+
+
+
+

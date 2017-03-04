@@ -1,6 +1,8 @@
-/// <reference path="./typings/tsd.d.ts" />
+/// <reference path="./typings/index.d.ts" />
+/// <reference path="./react-router-page-transition.d.ts" />
 
 // globals
+import Component = __React.Component;
 declare var i18n: any;
 
 interface Window {
@@ -18,6 +20,8 @@ interface Window {
 export interface Promise {
     then(success: (result: any) => void, error: (e: any) => void): Promise;
 }
+
+
 
 
 

@@ -23,4 +23,8 @@ export default class CityView extends ResourceComponent<CityDetail, any, any> {
             </div>
         );
     }
+
+    public renderLoading():React.ReactElement<any> {
+        return <div className="city-view transition-item">Loading...</div>
+    }
 }

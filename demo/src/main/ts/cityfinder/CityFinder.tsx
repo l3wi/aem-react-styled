@@ -1,6 +1,7 @@
 import * as React from "react";
 import {IndexRoute, Router, Route} from "react-router";
 import ResourceRoute from "aem-react-js/router/ResourceRoute";
+import AemRoute from "aem-react-js/router/AemRoute";
 import CityView from "./CityView";
 import CityListView from "./CityListView";
 import {ResourceComponent} from "aem-react-js/component/ResourceComponent";
@@ -22,19 +23,21 @@ export default class CityFinder extends ResourceComponent<any, any, any> {
         let resourcePath: string = resourceMapping.resolve(sling.getContainingPagePath());
 
         let depth = !!this.getResource() ? this.getResource().depth || 1 : 1;
-        let resultPath = ResourceUtils.findAncestor(resourcePath, depth)
+        let resultPath = ResourceUtils.findAncestor(resourcePath, depth);
         resourcePath = resultPath.path;
 
         let resourceComponent: any = CityView;
         let indexPath: string = resourceMapping.map(resourcePath);
         let pattern: string = resourceMapping.map(resourcePath + "/(:name)");
 
+        let props: any  = {baseResourcePath: resourcePath};
+
         return (
             <div>
             <Router history={history}>
-                <Route path={indexPath} component={CityListView} baseResourcePath={resourcePath}>
-                    <IndexRoute component={Home} baseResourcePath={resourcePath}/>
-                    <Route path={pattern} resourceComponent={resourceComponent} component={ResourceRoute}/>
+                <Route path={indexPath} component={CityListView} {...props} >
+                    <IndexRoute component={Home} {...props} />
+                    <AemRoute path={pattern} resourceComponent={resourceComponent} component={ResourceRoute}/>
                 </Route>
             </Router>
             </div>

@@ -17,8 +17,8 @@ rootComponentRegistry.add(componentRegistry);
 rootComponentRegistry.init();
 AemGlobal.registry = rootComponentRegistry;
 
-AemGlobal.renderReactComponent = function (path: string, resourceType: string, wcmmode: string): any {
-    let container: Container = new Container();
+AemGlobal.renderReactComponent = function (path: string, resourceType: string, wcmmode: string, renderRootDialog: boolean): any {
+    let container: Container = new Container(null);
     container.register("javaSling", Cqx.sling);
     let cache: Cache = new Cache();
     let serverSling = new ServerSling(cache, container.get("javaSling"));
@@ -30,5 +30,5 @@ AemGlobal.renderReactComponent = function (path: string, resourceType: string, w
     container.register("resourceMapping", new ResourceMappingImpl(".html"))
 
     let serverRenderer: ServerRenderer = new ServerRenderer(rootComponentRegistry, container);
-    return serverRenderer.renderReactComponent(path, resourceType, wcmmode);
+    return serverRenderer.renderReactComponent(path, resourceType, wcmmode, renderRootDialog);
 }

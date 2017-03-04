@@ -11,6 +11,7 @@ import javax.script.ScriptException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.pool2.ObjectPool;
+import org.apache.jackrabbit.util.Text;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -97,7 +98,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       boolean serverRendering = !SERVER_RENDERING_DISABLED.equals(request.getParameter(SERVER_RENDERING_PARAM));
       String cacheString = null;
       if (serverRendering) {
-        RenderResult result = renderReactMarkup(resource.getPath(), resource.getResourceType(), getWcmMode(request), scriptContext);
+        RenderResult result = renderReactMarkup(resource.getPath(), resource.getResourceType(), getWcmMode(request), scriptContext, renderAsJson);
         renderedHtml = result.html;
         cacheString = result.cache;
       } else if (renderAsJson) {
@@ -183,7 +184,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
    *          component name
    * @return
    */
-  private RenderResult renderReactMarkup(String path, String resourceType, String wcmmode, ScriptContext scriptContext) {
+  private RenderResult renderReactMarkup(String path, String resourceType, String wcmmode, ScriptContext scriptContext, boolean renderRootDialog) {
     JavascriptEngine javascriptEngine;
     try {
       javascriptEngine = enginePool.borrowObject();
@@ -191,7 +192,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
         if (reloadScripts) {
           javascriptEngine.reloadScripts();
         }
-        return javascriptEngine.render(path, resourceType, wcmmode, createCqx(scriptContext));
+        return javascriptEngine.render(path, resourceType, wcmmode, createCqx(scriptContext), renderRootDialog);
       } finally {
 
         enginePool.returnObject(javascriptEngine);
@@ -213,6 +214,10 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
   public void stop() {
     enginePool.close();
+  }
+
+  public static void main(String[] args) {
+    System.out.println(Text.escapeIllegalJcrChars("[]"));
   }
 
 }

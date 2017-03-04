@@ -3,6 +3,7 @@ import AemComponent from "aem-react-js/component/AemComponent";
 import AemLink from "aem-react-js/router/AemLink";
 import {ResourceMapping} from "aem-react-js/router/ResourceMapping";
 import ServiceProxy from "aem-react-js/di/ServiceProxy";
+import PageTransition from "react-router-page-transition";
 
 export default class CityListView extends AemComponent<any, any> {
 
@@ -12,7 +13,6 @@ export default class CityListView extends AemComponent<any, any> {
         let resourceMapping: ResourceMapping = this.getComponent("resourceMapping");
         let index: string = resourceMapping.map(this.props.route.baseResourcePath);
 
-
         return (
             <div>
                 <h3><AemLink to={index}>Cities</AemLink></h3>
@@ -21,7 +21,9 @@ export default class CityListView extends AemComponent<any, any> {
                         {storeList}
                     </ul>
                     <div style={{flexGrow: 1}} className="detail">
-                        {this.props.children}
+                        <PageTransition>
+                            {this.props.children}
+                        </PageTransition>
                     </div>
                 </div>
             </div>

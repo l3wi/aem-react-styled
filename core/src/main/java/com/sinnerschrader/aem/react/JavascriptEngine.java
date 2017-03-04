@@ -145,13 +145,13 @@ public class JavascriptEngine {
    *          API object for current request
    * @return
    */
-  public RenderResult render(String path, String resourceType, String wcmmode, Cqx cqx) {
+  public RenderResult render(String path, String resourceType, String wcmmode, Cqx cqx, boolean renderRootDialog) {
 
     Invocable invocable = ((Invocable) engine);
     try {
       engine.getBindings(ScriptContext.ENGINE_SCOPE).put("Cqx", cqx);
       Object AemGlobal = engine.get("AemGlobal");
-      Object value = invocable.invokeMethod(AemGlobal, "renderReactComponent", path, resourceType, wcmmode);
+      Object value = invocable.invokeMethod(AemGlobal, "renderReactComponent", path, resourceType, wcmmode, renderRootDialog);
 
       RenderResult result = new RenderResult();
       result.html = (String) ((Map<String, Object>) value).get("html");

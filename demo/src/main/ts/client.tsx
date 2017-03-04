@@ -11,7 +11,7 @@ let rootComponentRegistry: RootComponentRegistry = new RootComponentRegistry();
 rootComponentRegistry.add(componentRegistry);
 rootComponentRegistry.init();
 
-let container: Container = new Container({});
+let container: Container = new Container({} as any);
 let cache: Cache = new Cache();
 let host: string = location.protocol + "//" + location.host;
 let clientSling: ClientSling = new ClientSling(cache, host);
