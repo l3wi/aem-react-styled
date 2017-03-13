@@ -34,8 +34,6 @@ import com.sinnerschrader.aem.react.exception.TechnicalException;
 
 public class ReactScriptEngine extends AbstractSlingScriptEngine {
 
-  public static final String WRAPPER_ELEMENT_ONLY_SELECTOR = "dialog";
-
   public interface Command {
     public Object execute(JavascriptEngine e);
   }
@@ -87,7 +85,7 @@ public class ReactScriptEngine extends AbstractSlingScriptEngine {
       boolean renderAsJson = Arrays.asList(request.getRequestPathInfo().getSelectors()).indexOf("json") >= 0;
       Resource resource = request.getResource();
 
-      boolean dialog = Arrays.asList(request.getRequestPathInfo().getSelectors()).contains(WRAPPER_ELEMENT_ONLY_SELECTOR);
+      boolean dialog = request.getAttribute(Sling.ATTRIBUTE_AEM_REACT_DIALOG) != null;
 
       if (dialog) {
         // just rendering to get the wrapper element and author mode js

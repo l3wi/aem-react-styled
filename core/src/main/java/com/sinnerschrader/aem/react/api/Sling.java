@@ -28,10 +28,10 @@ import org.jsoup.nodes.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.day.cq.wcm.api.components.IncludeOptions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sinnerschrader.aem.react.PrintWriterResponseWrapper;
-import com.sinnerschrader.aem.react.ReactScriptEngine;
 import com.sinnerschrader.aem.react.exception.TechnicalException;
 
 /**
@@ -42,6 +42,8 @@ import com.sinnerschrader.aem.react.exception.TechnicalException;
  *
  */
 public class Sling {
+
+  public static final String ATTRIBUTE_AEM_REACT_DIALOG = "AEM_REACT_DIALOG";
 
   public static class EditDialog {
     private static final Map<String, String> REACT_MAPPING = new HashMap<String, String>() {
@@ -260,11 +262,24 @@ public class Sling {
           opts.setForceResourceType(resourceType);
         }
         if (dialog) {
-          opts.setAddSelectors(ReactScriptEngine.WRAPPER_ELEMENT_ONLY_SELECTOR);
+          Object previousValue = request.getAttribute(ATTRIBUTE_AEM_REACT_DIALOG);
+          request.setAttribute(ATTRIBUTE_AEM_REACT_DIALOG, true);
+          IncludeOptions options = IncludeOptions.getOptions(request, true);
+          options.forceEditContext(true);
+          RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
+          dispatcher.include(request, customResponse);
+          if (previousValue == null) {
+            request.removeAttribute(ATTRIBUTE_AEM_REACT_DIALOG);
+          } else {
+            request.setAttribute(ATTRIBUTE_AEM_REACT_DIALOG, previousValue);
+          }
+
+        } else {
+
+          RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
+          dispatcher.include(request, customResponse);
         }
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(includeRes, opts);
-        dispatcher.include(request, customResponse);
       } catch (Exception e) {
         LOG.error("Failed to include resource {}", script, e);
       }
