@@ -6,7 +6,7 @@ can be edited in the author mode.
 The main method to implement in a ResourceComponent is `renderBody()`. It is called
 by the `render` method once the resource is successfully fetched. The resource is available via `this.getResource()`.
 
-````typescript
+````typescript jsx
 
 import {ResourceComponent} from "aem-react-js/component/ResourceComponent";
 import * as React from "react";
@@ -33,7 +33,7 @@ turns the component into a parsys like container for any child components. If th
   then a custom rendering might be a better solution.
   
   
-````typescript
+````typescript jsx
 
 public renderBody(): React.ReactElement<any> {
 
@@ -48,4 +48,13 @@ public renderBody(): React.ReactElement<any> {
 }
 ````
 
+# Embed AEM components
+
+To embed another AEm component you use `<ResourceInclude/>` and pass path and resourceType.
+
+````typescript jsx
+
+  return (<div><ResourceInclude resourceType="/components/text" path="test"/></div>)
+
+````
 

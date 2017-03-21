@@ -3,7 +3,7 @@ The resource will be loaded as json by calling `getResource()` and therefore the
 advance by
 overriding the method `getDepth()`. In accordance with the sling conventions 0 means a single level.
 
- ````typescript
+ ````typescript jsx
      public getDepth(): number {
          return 2;
      }
@@ -16,7 +16,7 @@ similar ui.
 Asynchronuous loading happens when a ResourceComponent's path prop is changed or a new ResourceComponent
 is added to the resource tree in the client. This is often the case when the react router library is used.
 
-````typescript
+````typescript jsx
     public renderLoading(): React.ReactElement<any> {
 
         return (

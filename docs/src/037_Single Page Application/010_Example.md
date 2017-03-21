@@ -40,7 +40,7 @@ in all routes while its child depends on the individual route. The router config
 <Router history={history}>
     <Route path='/cities.html' component={CityListView}>
         <IndexRoute component={Welcome}/>
-        <Route path='/cities/(:name).html' resourceComponent={CityView} component={ResourceRoute}/>
+        <AemRoute path='/cities/(:name).html' resourceComponent={CityView} component={ResourceRoute}/>
     </Route>
 </Router>
 
@@ -56,6 +56,22 @@ To use this component you create AEM pages resemble the router configuration.
     - /cities/münchen.html
     
 > # Important [[info]]
->The router component must be located in the same path relative to the page.
+> The router component must be located in the same path relative to the page's root (e.g. jcr:content/par/city_finder).
 >
 >
+
+To decouple the absolute path from the router component it makes sense to store a depth
+property in the router component which makes it possible for the router component to
+derive the root route from the current page path. 
+
+__Example__
+The current page is `/cities/hamburg.html` and the depth is 1 then the root route is `/cities` and the 
+````typscript jsx
+        let root = ...
+        <Router history={history}>
+            <Route path={root+".html"}' component={CityListView}>
+                <IndexRoute component={Welcome}/>
+                <AemRoute path={root+"/(:name).html"} resourceComponent={CityView} component={ResourceRoute}/>
+            </Route>
+        </Router>
+````

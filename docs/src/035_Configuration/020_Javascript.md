@@ -8,7 +8,7 @@ For the server the bootstrap file must provide the method `renderReactComponent`
 and the `RootComponentRegistry` on the global variable `AemGlobal`. The global variable `AemGlobal` is created by the ScriptEngine.
 The Scriptengine will call `AemGlobal.renderReactComponent` when an AEM component is rendered.
 
-````TypeScript
+````typescript jsx
 declare var Cqx: any;
 declare var AemGlobal: any;
 
@@ -25,7 +25,7 @@ The implementation of `renderReactComponent` instantiates the the Sling implemen
  The configuration of the javascript is based on a container which must at least contain the cache and the sling implementation.
  
  
-````Typescript
+````typescript jsx
     let container: Container = new Container();
     container.register("javaSling", Cqx.sling);
     let cache: Cache = new Cache();
@@ -46,7 +46,7 @@ and call `initReactComponents` on it. This should be done after the document was
 with the container.The `Sling` instance for the client uses the cache created on the server or gets data via ajax while the server instance
 uses the Java API directly.
 
-````Typescript
+````typescript jsx
 
 interface MyWindow {
     AemGlobal: any;

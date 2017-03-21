@@ -1,7 +1,7 @@
 There must be one instance of `RootComponentRegistry`. It is responsible for mapping each React component to a resourceType.
 A component is a registered with one of the `ComponentRegistry`s which are maped to a resource path.
 
-````typescript
+````typescript jsx
 import ComponentRegistry from "aem-react-js/ComponentRegistry";
 import RootComponentRegistry from "aem-react-js/RootComponentRegistry";
 import MyComponent from "./MyComponent";

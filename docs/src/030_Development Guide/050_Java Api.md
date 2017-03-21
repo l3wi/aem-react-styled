@@ -10,7 +10,7 @@ getRequestModel(className) | adapt the current request to the given class name.
 getOsgiService(className) | get the osgi service by its service class name
 
 
-````typescript
+````typescript jsx
     import ServiceProxy from "aem-react-js/ServiceProxy";
     ...
     public renderBody(): React.ReactElement<any> {
