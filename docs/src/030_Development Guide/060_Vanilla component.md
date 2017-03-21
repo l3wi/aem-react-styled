@@ -1,7 +1,7 @@
 A vanilla react component can be registered
 as a AEM component as well.
 
-````typescript jsx
+````typescript
 registry.registerVanilla({component: TextField});
 registry.registerVanilla({component: Panel, parsys: {path: "content"}, depth: 2});
 ````
@@ -45,7 +45,7 @@ A transformation is a function that is passed the resource and the resourceCompo
 the react component.
 
 In this example a sling model is used in the transformation:
-````typescript jsx
+````typescript
 let transform: any = (resource: any, wrapper: ResourceComponent<any, any, any>) => {
     let model: ServiceProxy = r.getResourceModel("demop.core.models.MyModel");
     let newProps: any = {title: resource.label};
@@ -64,14 +64,14 @@ When including a vanilla component registered as an AEM component directly in a 
  Otherwise it will not be editable on the page.
  
  
-````typescript jsx
+````typescript
   <div>
      <VanillaInclude path="test" component={MyVanillaComponent}/>
   </div>   
 ````
 alternatively you can also use the standard include:
 
-````typescript jsx
+````typescript
   <div>
      <ResourceInclude path="test" resourceType="/components/my-vanilla"/>
   </div>   

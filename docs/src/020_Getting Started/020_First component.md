@@ -19,7 +19,7 @@ Alternatively the config in the package.json can be modified.
 Create a file MyComponent.tsx under /ui.apps/src/main/ts/.
 
 
-````typescript jsx
+````typescript
 
 
 import {ResourceComponent} from "aem-react-js/component/ResourceComponent";
@@ -48,7 +48,7 @@ export default class MyComponent extends ResourceComponent<any, any, any> {
 The component needs to be associated with a resourceType `${appsFolderName}`/components/my-component.
 Open /ui.apps/src/main/ts/componentRegistry.tsx and add two lines
 
- ````typescript jsx
+ ````typescript
  // add this line at the top
  import MyComponent from "./MyComponent";
  ...

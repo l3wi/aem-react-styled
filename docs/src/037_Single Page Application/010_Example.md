@@ -66,7 +66,7 @@ derive the root route from the current page path.
 
 __Example__
 The current page is `/cities/hamburg.html` and the depth is 1 then the root route is `/cities` and the 
-````typscript jsx
+````typescript
         let root = ...
         <Router history={history}>
             <Route path={root+".html"}' component={CityListView}>
