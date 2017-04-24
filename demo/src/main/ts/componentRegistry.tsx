@@ -7,8 +7,10 @@ import AccordionElement from "./accordion/accordion-element";
 import CityFinder from "./cityfinder/CityFinder";
 import CityView from "./cityfinder/CityView";
 import {Panel} from "./vanilla/Panel";
+import {Document} from "./vanilla/document";
 import {TextField} from "./vanilla/TextField";
 import RichText from "./text/richtext";
+import Hero from "./hero/hero";
 
 let registry: ComponentRegistry = new ComponentRegistry("react-demo/components");
 registry.register(Embedded);
@@ -21,7 +23,11 @@ registry.register(CityFinder);
 registry.register(CityView);
 registry.register(AccordionElement);
 
+registry.register(Hero);
+
+
 registry.registerVanilla({component: TextField});
+registry.registerVanilla({component: Document});
 registry.registerVanilla({component: Panel, parsys: {path: "content"}, depth: 2});
 
 export default registry;

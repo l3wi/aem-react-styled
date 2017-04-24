@@ -1,14 +1,17 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowJs": true,
     "target": "es3",
     "sourceMap": true,
     "module": "commonjs",
     "jsx": "react",
-    "noEmit":false,
-    "noImplicitAny": true,
+    "noEmit": false,
+    "noImplicitAny": false,
+    "suppressImplicitAnyIndexErrors" : true,
     "removeComments": true,
-    "preserveConstEnums": false
+    "preserveConstEnums": false,
+    "experimentalDecorators": true
   },
   "files": [
     "./references.d.ts",

@@ -67,8 +67,7 @@ var config = {
         loaders: [
             {
                 test: /\.(ts|tsx)$/,
-                loader: 'ts-loader'
-
+                loader: "ts-loader"
             }
         ]
     },

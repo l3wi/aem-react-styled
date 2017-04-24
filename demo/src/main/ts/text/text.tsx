@@ -12,9 +12,16 @@ export default class Text extends resource.ResourceComponent<ReactTextResource, 
         let text: string = this.getResource().propText;
         if (this.isWcmEnabled() && !text) {
             text = "please enter a text";
-        }  
+        }
         return (
-            <span>{text}</span>
+            <span>
+              {text}
+            <style jsx>{`
+              span {
+                color: pink;
+              }
+              `}</style>
+            </span>
         );
     }
 }
