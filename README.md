@@ -1,50 +1,41 @@
-# Adobe Experience Manager ("[AEM]") components written in [React]
------
+## AEM components w/ React & Styled-Components
 
-This project makes it possible to render Adobe Experience Manager ("AEM") components via React.
+Forked from [here](https://github.com/sinnerschrader/aem-react)
 
-# STATUS
-
-[![Build Status](https://travis-ci.org/sinnerschrader/aem-react.svg?branch=master)](https://travis-ci.org/sinnerschrader/aem-react)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.sinnerschrader.aem.react/aem-react/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.sinnerschrader.aem.react/aem-react)
-
-- Version: 0.4
-- API is unstable
-
-# Documentation
-
-An comprehensive **[documentation](https://sinnerschrader.github.io/aem-react/)** is being developed. 
-
-
-# Deploy / install the demo
+#### Deploy / install the demo
 
 You can download the demo content package from [here]() and deploy it to your local AEM instance. 
-View the [demo](localhost:4502/content/react-demo/index.html)
 
 To install the demo locally:
 
 ```bash
 
-git clone https://github.com/sinnerschrader/aem-react.git
+git clone https://github.com/l3wi/aem-react-styled.git
 
-cd aem-react
+cd aem-react-styled
 
 mvn clean install -PautoInstallPackage
 
+open http://localhost:4502/editor.html/content/reactdemo/overview.html
 ```
 
-##Trouble shooting
+#### Edit the demo
 
-### Nashorn engine erro: "No such function renderReactComponent"
-Check configuration of ReactScriptEngine in webconsole:
-- go to /system/console/configMgr
-- search for "react" in the browser
-- open the configuration of "ReactJs Script Engine Factory"
-- important: jcr path must be "/etc/designs/react-demo/js/react-demo/server.js/jcr:content"
-- if it is not then update it.
+To edit the demo locally:
 
+```bash
+cd aem-react-styled
 
-# Background
+atom . // or whatever editor you used
+
+cd aem-react-styled/demo/src/main/ts
+
+yarn
+
+yarn watch
+```
+
+#### Background
 
 Nowadays every web application contains at least some highly interactive ui components
 that are implemented via javascript in the client. 
@@ -63,14 +54,6 @@ This project makes it possible to render AEM components with React on the server
 # License
 
 MIT
-
-# Contribution
-
-Contributions are welcome! 
-
-The repository contains the OSGI bundle in the folder core.
-In the folder demo is a demo project that can be used as a starting point 
-for your own project.
 
 ## OSGI core bundle
 
@@ -95,4 +78,5 @@ and integrated by the build tools in the demo project.
 
 [React]: http://facebook.github.io/react/
 [AEM]: http://www.adobe.com/de/marketing-cloud/enterprise-content-management.html
+
 
